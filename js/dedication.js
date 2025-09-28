@@ -9,52 +9,52 @@ function createHotWheelsBouquet() {
         'https://files.catbox.moe/9gecld.jpg'
     ];
     
-    // Posiciones para los girasoles (formando un ramo compacto)
-    const sunflowerPositions = [
-        // Girasol principal (centro)
-        { left: 50, top: 45, stemHeight: 160 },
-        // Girasoles alrededor - MÁS PEQUEÑOS
-        { left: 35, top: 40, stemHeight: 150 },
-        { left: 65, top: 40, stemHeight: 150 },
-        { left: 40, top: 55, stemHeight: 140 },
-        { left: 60, top: 55, stemHeight: 140 },
-        { left: 30, top: 50, stemHeight: 145 },
-        { left: 70, top: 50, stemHeight: 145 }
+    // Posiciones para los girasoles (BASE DEL TALLO)
+    const flowerPositions = [
+        // Flores formando un ramo natural
+        { left: 50, stemHeight: 180 },  // Centro
+        { left: 40, stemHeight: 170 },  // Izquierda
+        { left: 60, stemHeight: 170 },  // Derecha
+        { left: 35, stemHeight: 160 },  // Izquierda exterior
+        { left: 65, stemHeight: 160 },  // Derecha exterior
+        { left: 45, stemHeight: 150 },  // Izquierda interior
+        { left: 55, stemHeight: 150 }   // Derecha interior
     ];
     
-    // Crear cada girasol CON SU TALLO CORRESPONDIENTE
-    sunflowerPositions.forEach((position, index) => {
-        createSunflowerWithStem(bouquetContainer, carImages, position, index);
+    // Crear cada flor CON SU TALLO UNIDO
+    flowerPositions.forEach((position, index) => {
+        createCompleteFlower(bouquetContainer, carImages, position, index);
     });
     
     // Crear hojas adicionales
     createAdditionalLeaves(bouquetContainer);
 }
 
-function createSunflowerWithStem(container, carImages, position, index) {
-    // PRIMERO crear el tallo
+function createCompleteFlower(container, carImages, position, index) {
+    // Crear contenedor principal (tallo + flor)
+    const flowerContainer = document.createElement('div');
+    flowerContainer.className = 'flower-with-stem';
+    flowerContainer.style.left = `${position.left}%`;
+    
+    // Crear tallo
     const stem = document.createElement('div');
     stem.className = 'flower-stem';
-    stem.style.left = `${position.left}%`;
     stem.style.height = `${position.stemHeight}px`;
-    stem.style.transform = `translateX(-50%) rotate(${Math.random() * 6 - 3}deg)`;
+    stem.style.transform = `translateX(-50%) rotate(${Math.random() * 8 - 4}deg)`;
     
-    // LUEGO crear la flor en la punta del tallo
+    // Crear girasol en la punta del tallo
     const sunflower = document.createElement('div');
     sunflower.className = 'sunflower';
-    sunflower.style.left = `${position.left}%`;
-    sunflower.style.top = `calc(${position.top}% - ${position.stemHeight * 0.8}px)`;
-    sunflower.style.transform = `translate(-50%, -50%)`;
     sunflower.style.animationDelay = `${index * 0.2}s`;
     
-    // Crear pétalos (12 pétalos alrededor - FIJOS)
+    // Crear pétalos (12 pétalos alrededor)
     const petalCount = 12;
     for (let i = 0; i < petalCount; i++) {
         const petal = document.createElement('div');
         petal.className = 'petal';
         
         const angle = (i / petalCount) * Math.PI * 2;
-        const petalDistance = 30; // Distancia más pequeña
+        const petalDistance = 30;
         
         petal.style.left = `50%`;
         petal.style.top = `50%`;
@@ -63,11 +63,10 @@ function createSunflowerWithStem(container, carImages, position, index) {
         sunflower.appendChild(petal);
     }
     
-    // Crear centro del girasol SOLO CON IMAGEN CIRCULAR
+    // Crear centro con imagen circular del carrito
     const center = document.createElement('div');
     center.className = 'sunflower-center';
     
-    // Agregar imagen del carrito EN FORMA CIRCULAR
     const carImg = document.createElement('img');
     const carType = index % carImages.length;
     carImg.src = carImages[carType];
@@ -80,29 +79,30 @@ function createSunflowerWithStem(container, carImages, position, index) {
     // Crear hoja en el tallo
     const leaf = document.createElement('div');
     leaf.className = 'flower-leaf';
-    leaf.style.left = `${position.left}%`;
-    leaf.style.bottom = `${position.stemHeight * 0.5}px`;
-    leaf.style.transform = `translateX(-50%) rotate(${Math.random() * 25 - 12}deg)`;
+    leaf.style.bottom = `${position.stemHeight * 0.6}px`;
+    leaf.style.transform = `translateX(-50%) rotate(${Math.random() * 30 - 15}deg)`;
     
-    // Agregar elementos al DOM EN ORDEN CORRECTO
-    container.appendChild(stem);
-    container.appendChild(leaf);
-    container.appendChild(sunflower);
+    // Ensamblar todo
+    flowerContainer.appendChild(stem);
+    flowerContainer.appendChild(leaf);
+    flowerContainer.appendChild(sunflower);
+    container.appendChild(flowerContainer);
 }
 
 function createAdditionalLeaves(container) {
-    // Agregar hojas adicionales en la base
+    // Agregar hojas adicionales en la base del ramo
     const additionalLeaves = [
-        { left: 40, bottom: 20 },
-        { left: 50, bottom: 25 },
-        { left: 60, bottom: 22 },
-        { left: 45, bottom: 30 },
-        { left: 55, bottom: 28 }
+        { left: 38, bottom: 25 },
+        { left: 48, bottom: 30 },
+        { left: 58, bottom: 28 },
+        { left: 42, bottom: 35 },
+        { left: 52, bottom: 32 }
     ];
     
     additionalLeaves.forEach(leafPos => {
         const leaf = document.createElement('div');
         leaf.className = 'flower-leaf';
+        leaf.style.position = 'absolute';
         leaf.style.left = `${leafPos.left}%`;
         leaf.style.bottom = `${leafPos.bottom}px`;
         leaf.style.transform = `rotate(${Math.random() * 40 - 20}deg) scale(${0.6 + Math.random() * 0.3})`;
