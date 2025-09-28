@@ -1,4 +1,4 @@
-// Crear ramo de girasoles con centros de carritos
+// Crear ramo de girasoles con animación de crecimiento
 function createHotWheelsBouquet() {
     const bouquetContainer = document.getElementById('hotwheels-bouquet');
     
@@ -11,44 +11,49 @@ function createHotWheelsBouquet() {
     
     // Posiciones CENTRADAS para los girasoles
     const flowerPositions = [
-        // {left, stemHeight} - TODOS CENTRADOS
-        { left: 50, stemHeight: 200 },  // Centro
-        { left: 42, stemHeight: 190 },  // Izquierda cerca del centro
-        { left: 58, stemHeight: 190 },  // Derecha cerca del centro
-        { left: 38, stemHeight: 180 },  // Izquierda
-        { left: 62, stemHeight: 180 },  // Derecha
-        { left: 46, stemHeight: 170 },  // Izquierda interior
-        { left: 54, stemHeight: 170 }   // Derecha interior
+        // {left, stemHeight, delay} - CON RETRASOS PARA ANIMACIÓN
+        { left: 50, stemHeight: 200, delay: 0 },    // Centro
+        { left: 42, stemHeight: 190, delay: 300 },  // Izquierda cerca del centro
+        { left: 58, stemHeight: 190, delay: 600 },  // Derecha cerca del centro
+        { left: 38, stemHeight: 180, delay: 900 },  // Izquierda
+        { left: 62, stemHeight: 180, delay: 1200 }, // Derecha
+        { left: 46, stemHeight: 170, delay: 1500 }, // Izquierda interior
+        { left: 54, stemHeight: 170, delay: 1800 }  // Derecha interior
     ];
     
-    // Crear cada flor CON SU TALLO CORRESPONDIENTE
+    // Crear cada flor CON ANIMACIÓN UNO POR UNO
     flowerPositions.forEach((position, index) => {
-        createFlowerWithStem(bouquetContainer, carImages, position, index);
+        setTimeout(() => {
+            createFlowerWithStem(bouquetContainer, carImages, position, index);
+        }, position.delay);
     });
     
-    // Crear hojas adicionales
-    createAdditionalLeaves(bouquetContainer);
+    // Crear hojas adicionales con retraso
+    setTimeout(() => {
+        createAdditionalLeaves(bouquetContainer);
+    }, 2100);
 }
 
 function createFlowerWithStem(container, carImages, position, index) {
     // Calcular posición de la flor (final del tallo)
-    const flowerTop = 500 - position.stemHeight; // 500 es la altura del contenedor
+    const flowerTop = 500 - position.stemHeight;
     
-    // Crear TALLO
+    // Crear TALLO CON ANIMACIÓN DE CRECIMIENTO
     const stem = document.createElement('div');
     stem.className = 'flower-stem';
     stem.style.left = `${position.left}%`;
-    stem.style.height = `${position.stemHeight}px`;
+    stem.style.setProperty('--final-height', `${position.stemHeight}px`);
+    stem.style.animationDelay = '0s';
     stem.style.transform = `translateX(-50%) rotate(${Math.random() * 4 - 2}deg)`;
     
-    // Crear FLOR en el FINAL del tallo - SIN ANIMACIÓN
+    // Crear FLOR con animación de aparición
     const sunflower = document.createElement('div');
     sunflower.className = 'sunflower';
     sunflower.style.left = `${position.left}%`;
     sunflower.style.top = `${flowerTop}px`;
-    sunflower.style.transform = `translate(-50%, -50%)`;
+    sunflower.style.animationDelay = '1.2s'; // Aparece después del tallo
     
-    // Crear pétalos (12 pétalos alrededor)
+    // Crear pétalos con animación
     const petalCount = 12;
     for (let i = 0; i < petalCount; i++) {
         const petal = document.createElement('div');
@@ -59,7 +64,8 @@ function createFlowerWithStem(container, carImages, position, index) {
         
         petal.style.left = `50%`;
         petal.style.top = `50%`;
-        petal.style.transform = `translate(-50%, -50%) rotate(${angle * 180 / Math.PI}deg) translateX(${petalDistance}px)`;
+        petal.style.setProperty('--petal-angle', `${angle * 180 / Math.PI}deg`);
+        petal.style.animationDelay = `${1.5 + (i * 0.05)}s`; // Pétalos aparecen uno por uno
         
         sunflower.appendChild(petal);
     }
@@ -77,12 +83,13 @@ function createFlowerWithStem(container, carImages, position, index) {
     center.appendChild(carImg);
     sunflower.appendChild(center);
     
-    // Crear hoja en el tallo
+    // Crear hoja con animación
     const leaf = document.createElement('div');
     leaf.className = 'flower-leaf';
     leaf.style.left = `${position.left}%`;
     leaf.style.bottom = `${position.stemHeight * 0.5}px`;
-    leaf.style.transform = `translateX(-50%) rotate(${Math.random() * 20 - 10}deg)`;
+    leaf.style.setProperty('--leaf-rotation', `${Math.random() * 20 - 10}deg`);
+    leaf.style.animationDelay = '0.8s'; // Hoja aparece durante el crecimiento
     
     // Agregar elementos al DOM
     container.appendChild(stem);
@@ -100,12 +107,14 @@ function createAdditionalLeaves(container) {
         { left: 52, bottom: 38 }
     ];
     
-    additionalLeaves.forEach(leafPos => {
+    additionalLeaves.forEach((leafPos, index) => {
         const leaf = document.createElement('div');
         leaf.className = 'flower-leaf';
         leaf.style.left = `${leafPos.left}%`;
         leaf.style.bottom = `${leafPos.bottom}px`;
-        leaf.style.transform = `rotate(${Math.random() * 30 - 15}deg) scale(${0.6 + Math.random() * 0.3})`;
+        leaf.style.setProperty('--leaf-rotation', `${Math.random() * 30 - 15}deg`);
+        leaf.style.animationDelay = `${index * 0.1}s`;
+        leaf.style.animationDuration = '0.6s';
         container.appendChild(leaf);
     });
 }
