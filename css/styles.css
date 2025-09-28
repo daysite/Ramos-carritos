@@ -7,7 +7,7 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
     color: white;
     overflow-x: hidden;
     min-height: 100vh;
@@ -47,13 +47,14 @@ body {
     position: relative;
     width: 100%;
     height: 500px;
-    background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+    background: linear-gradient(to bottom, #1a1a2e, #16213e);
     border-radius: 20px;
     overflow: hidden;
-    border: 3px solid rgba(255,255,255,0.3);
+    border: 3px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
 }
 
-/* TALLOS */
+/* TALLOS CON ANIMACIÓN DE CRECIMIENTO */
 .flower-stem {
     position: absolute;
     width: 4px;
@@ -62,13 +63,17 @@ body {
     transform-origin: bottom center;
     bottom: 0;
     z-index: 1;
+    opacity: 0;
+    animation: growStem 1.5s ease-out forwards;
 }
 
-/* GIRASOL en la punta del tallo - SIN ANIMACIÓN */
+/* GIRASOL en la punta del tallo - CON ANIMACIÓN DE APARICIÓN */
 .sunflower {
     position: absolute;
     transform-origin: center;
     z-index: 10;
+    opacity: 0;
+    animation: appearFlower 1s ease-out forwards;
 }
 
 /* Centro del girasol (SOLO IMAGEN CIRCULAR) */
@@ -91,7 +96,7 @@ body {
     object-fit: cover;
     border-radius: 50%;
     border: 2px solid #FFD700;
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
 }
 
 /* Pétalos del girasol - FIJOS */
@@ -103,6 +108,8 @@ body {
     border-radius: 50% 60% 50% 60%;
     transform-origin: center;
     z-index: 12;
+    opacity: 0;
+    animation: appearPetals 0.8s ease-out forwards;
 }
 
 /* Hojas en los tallos */
@@ -112,8 +119,60 @@ body {
     height: 10px;
     background: #32CD32;
     border-radius: 50% 0 50% 0;
-    opacity: 0.7;
+    opacity: 0;
     z-index: 2;
+    animation: appearLeaf 1s ease-out forwards;
+}
+
+/* ANIMACIONES */
+@keyframes growStem {
+    0% {
+        height: 0px;
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        height: var(--final-height);
+        opacity: 1;
+    }
+}
+
+@keyframes appearFlower {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    70% {
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes appearPetals {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) rotate(var(--petal-angle)) translateX(0px) scale(0);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) rotate(var(--petal-angle)) translateX(30px) scale(1);
+    }
+}
+
+@keyframes appearLeaf {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) rotate(0deg) scale(0);
+    }
+    100% {
+        opacity: 0.7;
+        transform: translateX(-50%) rotate(var(--leaf-rotation)) scale(1);
+    }
 }
 
 /* Mensaje de amor */
@@ -129,4 +188,26 @@ body {
     border-radius: 10px;
     backdrop-filter: blur(5px);
     border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Efectos de brillo en el fondo */
+.background-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%);
+    z-index: -1;
+    animation: glowMove 10s ease-in-out infinite;
+}
+
+@keyframes glowMove {
+    0%, 100% {
+        transform: translate(0, 0);
+    }
+    50% {
+        transform: translate(10px, 10px);
+    }
 }
