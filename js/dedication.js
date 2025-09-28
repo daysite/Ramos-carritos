@@ -9,16 +9,16 @@ function createHotWheelsBouquet() {
         'https://files.catbox.moe/9gecld.jpg'
     ];
     
-    // Posiciones para los girasoles (FLORES EN LA PUNTA DE LOS TALLOS)
+    // Posiciones CENTRADAS para los girasoles
     const flowerPositions = [
-        // {left, top, stemHeight}
-        { left: 50, top: 250, stemHeight: 180 },  // Centro - más alto
-        { left: 40, top: 270, stemHeight: 160 },  // Izquierda
-        { left: 60, top: 270, stemHeight: 160 },  // Derecha
-        { left: 35, top: 290, stemHeight: 140 },  // Izquierda exterior
-        { left: 65, top: 290, stemHeight: 140 },  // Derecha exterior
-        { left: 45, top: 300, stemHeight: 130 },  // Izquierda interior
-        { left: 55, top: 300, stemHeight: 130 }   // Derecha interior
+        // {left, stemHeight} - TODOS CENTRADOS
+        { left: 50, stemHeight: 200 },  // Centro
+        { left: 42, stemHeight: 190 },  // Izquierda cerca del centro
+        { left: 58, stemHeight: 190 },  // Derecha cerca del centro
+        { left: 38, stemHeight: 180 },  // Izquierda
+        { left: 62, stemHeight: 180 },  // Derecha
+        { left: 46, stemHeight: 170 },  // Izquierda interior
+        { left: 54, stemHeight: 170 }   // Derecha interior
     ];
     
     // Crear cada flor CON SU TALLO CORRESPONDIENTE
@@ -31,19 +31,22 @@ function createHotWheelsBouquet() {
 }
 
 function createFlowerWithStem(container, carImages, position, index) {
+    // Calcular posición de la flor (final del tallo)
+    const flowerTop = 500 - position.stemHeight; // 500 es la altura del contenedor
+    
     // Crear TALLO
     const stem = document.createElement('div');
     stem.className = 'flower-stem';
     stem.style.left = `${position.left}%`;
     stem.style.height = `${position.stemHeight}px`;
-    stem.style.transform = `translateX(-50%) rotate(${Math.random() * 6 - 3}deg)`;
+    stem.style.transform = `translateX(-50%) rotate(${Math.random() * 4 - 2}deg)`;
     
-    // Crear FLOR en la posición correcta (punta del tallo)
+    // Crear FLOR en el FINAL del tallo - SIN ANIMACIÓN
     const sunflower = document.createElement('div');
     sunflower.className = 'sunflower';
     sunflower.style.left = `${position.left}%`;
-    sunflower.style.top = `${position.top}px`;
-    sunflower.style.animationDelay = `${index * 0.2}s`;
+    sunflower.style.top = `${flowerTop}px`;
+    sunflower.style.transform = `translate(-50%, -50%)`;
     
     // Crear pétalos (12 pétalos alrededor)
     const petalCount = 12;
@@ -78,8 +81,8 @@ function createFlowerWithStem(container, carImages, position, index) {
     const leaf = document.createElement('div');
     leaf.className = 'flower-leaf';
     leaf.style.left = `${position.left}%`;
-    leaf.style.bottom = `${position.stemHeight * 0.4}px`;
-    leaf.style.transform = `translateX(-50%) rotate(${Math.random() * 25 - 12}deg)`;
+    leaf.style.bottom = `${position.stemHeight * 0.5}px`;
+    leaf.style.transform = `translateX(-50%) rotate(${Math.random() * 20 - 10}deg)`;
     
     // Agregar elementos al DOM
     container.appendChild(stem);
@@ -88,13 +91,13 @@ function createFlowerWithStem(container, carImages, position, index) {
 }
 
 function createAdditionalLeaves(container) {
-    // Agregar hojas adicionales en la base
+    // Agregar hojas adicionales en la base - CENTRADAS
     const additionalLeaves = [
-        { left: 38, bottom: 25 },
-        { left: 48, bottom: 30 },
-        { left: 58, bottom: 28 },
-        { left: 42, bottom: 35 },
-        { left: 52, bottom: 32 }
+        { left: 44, bottom: 30 },
+        { left: 50, bottom: 35 },
+        { left: 56, bottom: 32 },
+        { left: 48, bottom: 40 },
+        { left: 52, bottom: 38 }
     ];
     
     additionalLeaves.forEach(leafPos => {
@@ -102,7 +105,7 @@ function createAdditionalLeaves(container) {
         leaf.className = 'flower-leaf';
         leaf.style.left = `${leafPos.left}%`;
         leaf.style.bottom = `${leafPos.bottom}px`;
-        leaf.style.transform = `rotate(${Math.random() * 40 - 20}deg) scale(${0.6 + Math.random() * 0.3})`;
+        leaf.style.transform = `rotate(${Math.random() * 30 - 15}deg) scale(${0.6 + Math.random() * 0.3})`;
         container.appendChild(leaf);
     });
 }
