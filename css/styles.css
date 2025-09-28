@@ -60,26 +60,23 @@ body {
     animation: flowerFloat 4s ease-in-out infinite;
 }
 
-/* Centro del girasol (CÍRCULO con carrito) */
+/* Centro del girasol (SOLO IMAGEN CIRCULAR) */
 .sunflower-center {
     position: relative;
-    width: 70px;
-    height: 70px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    background: #8B4513;
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 10;
-    box-shadow: 0 0 15px rgba(139, 69, 19, 0.6);
     overflow: hidden;
-    border: 2px solid #654321;
 }
 
 /* Imagen del carrito en forma CIRCULAR */
 .car-center-image {
-    width: 55px;
-    height: 55px;
+    width: 45px;
+    height: 45px;
     object-fit: cover;
     border-radius: 50%;
     border: 2px solid #FFD700;
@@ -89,21 +86,20 @@ body {
 /* Pétalos del girasol - FIJOS */
 .petal {
     position: absolute;
-    width: 35px;
-    height: 18px;
+    width: 25px;
+    height: 12px;
     background: linear-gradient(to bottom, #FFD700, #FFA500);
     border-radius: 50% 60% 50% 60%;
     transform-origin: center;
     z-index: 5;
-    /* Quitamos animación para que sean fijos */
 }
 
 /* Tallos individuales */
 .flower-stem {
     position: absolute;
-    width: 5px;
+    width: 4px;
     background: linear-gradient(to top, #228B22, #32CD32);
-    border-radius: 3px;
+    border-radius: 2px;
     transform-origin: bottom center;
     bottom: 0;
     z-index: 1;
@@ -112,8 +108,8 @@ body {
 /* Hojas */
 .flower-leaf {
     position: absolute;
-    width: 20px;
-    height: 12px;
+    width: 18px;
+    height: 10px;
     background: #32CD32;
     border-radius: 50% 0 50% 0;
     opacity: 0.7;
