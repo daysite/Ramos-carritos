@@ -64,11 +64,10 @@ body {
     z-index: 1;
 }
 
-/* GIRASOL en la punta del tallo */
+/* GIRASOL en la punta del tallo - SIN ANIMACIÓN */
 .sunflower {
     position: absolute;
     transform-origin: center;
-    animation: flowerFloat 4s ease-in-out infinite;
     z-index: 10;
 }
 
@@ -115,12 +114,6 @@ body {
     border-radius: 50% 0 50% 0;
     opacity: 0.7;
     z-index: 2;
-}
-
-/* Animaciones */
-@keyframes flowerFloat {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-3px) rotate(0.5deg); }
 }
 
 /* Mensaje de amor */
