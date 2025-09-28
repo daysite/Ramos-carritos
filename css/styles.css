@@ -7,7 +7,7 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    background: #0a0a0a;
     color: white;
     overflow-x: hidden;
     min-height: 100vh;
@@ -47,11 +47,11 @@ body {
     position: relative;
     width: 100%;
     height: 500px;
-    background: linear-gradient(to bottom, #1a1a2e, #16213e);
+    background: #000000;
     border-radius: 20px;
     overflow: hidden;
     border: 3px solid rgba(255,255,255,0.1);
-    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
 }
 
 /* TALLOS CON ANIMACIÓN DE CRECIMIENTO */
@@ -99,12 +99,12 @@ body {
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
 }
 
-/* Pétalos del girasol - FIJOS */
+/* Pétalos del girasol - COLOR AZUL */
 .petal {
     position: absolute;
     width: 25px;
     height: 12px;
-    background: linear-gradient(to bottom, #FFD700, #FFA500);
+    background: linear-gradient(to bottom, #4A90E2, #357ABD);
     border-radius: 50% 60% 50% 60%;
     transform-origin: center;
     z-index: 12;
@@ -190,15 +190,15 @@ body {
     border: 1px solid rgba(255,255,255,0.2);
 }
 
-/* Efectos de brillo en el fondo */
+/* Efectos de brillo en el fondo oscuro */
 .background-glow {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%);
+    background: radial-gradient(circle at 20% 80%, rgba(74, 144, 226, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(53, 122, 189, 0.2) 0%, transparent 50%);
     z-index: -1;
     animation: glowMove 10s ease-in-out infinite;
 }
