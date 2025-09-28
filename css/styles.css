@@ -56,73 +56,116 @@ body {
 /* Tallos de las flores */
 .flower-stem {
     position: absolute;
-    width: 6px;
+    width: 8px;
     background: linear-gradient(to top, #228B22, #32CD32);
-    border-radius: 3px;
+    border-radius: 4px;
     transform-origin: bottom center;
     bottom: 0;
+    z-index: 1;
 }
 
-/* Flores de carritos */
-.hotwheel-flower {
+/* Centro del girasol CON CARRITOS */
+.sunflower-center {
     position: absolute;
-    transform-origin: center;
-    animation: flowerFloat 4s ease-in-out infinite;
-}
-
-/* Pétalos alrededor del carrito */
-.flower-petals {
-    position: relative;
-    width: 100px;
-    height: 100px;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, #8B4513, #654321);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    box-shadow: 0 0 20px rgba(139, 69, 19, 0.5);
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    padding: 10px;
+    overflow: hidden;
 }
 
-.petal {
+/* Carritos en el centro */
+.center-car {
+    width: 50px;
+    height: 25px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 2px solid #FFD700;
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
+    margin: 2px;
+    animation: centerCarFloat 3s ease-in-out infinite;
+}
+
+.center-car:nth-child(1) { animation-delay: 0s; }
+.center-car:nth-child(2) { animation-delay: 0.5s; }
+.center-car:nth-child(3) { animation-delay: 1s; }
+.center-car:nth-child(4) { animation-delay: 1.5s; }
+.center-car:nth-child(5) { animation-delay: 2s; }
+.center-car:nth-child(6) { animation-delay: 2.5s; }
+
+/* Pétalos del girasol */
+.sunflower-petal {
+    position: absolute;
+    width: 80px;
+    height: 30px;
+    background: linear-gradient(to bottom, #FFD700, #FF8C00);
+    border-radius: 40% 60% 40% 60%;
+    transform-origin: center;
+    opacity: 0.9;
+    z-index: 15;
+    animation: petalRotate 30s linear infinite;
+}
+
+/* Carritos en los pétalos exteriores */
+.car-flower {
+    position: absolute;
+    transform-origin: center;
+    animation: carOrbit 25s linear infinite;
+    z-index: 10;
+}
+
+.outer-car-image {
+    width: 45px;
+    height: 22px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 2px solid #FFD700;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.9);
+    transform: rotate(var(--car-rotation));
+}
+
+/* Hojas del girasol */
+.sunflower-leaf {
     position: absolute;
     width: 40px;
-    height: 40px;
-    background: radial-gradient(circle, #FFD700, #FFA500);
-    border-radius: 50%;
-    opacity: 0.8;
-}
-
-.petal:nth-child(1) { transform: rotate(0deg) translateX(50px); }
-.petal:nth-child(2) { transform: rotate(60deg) translateX(50px); }
-.petal:nth-child(3) { transform: rotate(120deg) translateX(50px); }
-.petal:nth-child(4) { transform: rotate(180deg) translateX(50px); }
-.petal:nth-child(5) { transform: rotate(240deg) translateX(50px); }
-.petal:nth-child(6) { transform: rotate(300deg) translateX(50px); }
-
-/* Imágenes de carritos */
-.car-image {
-    width: 60px;
-    height: 30px;
-    object-fit: cover;
-    border-radius: 5px;
-    border: 2px solid #FFD700;
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
-    z-index: 10;
-    position: relative;
-}
-
-/* Hojas decorativas */
-.flower-leaf {
-    position: absolute;
-    width: 30px;
-    height: 20px;
+    height: 25px;
     background: #32CD32;
     border-radius: 50% 0 50% 0;
-    opacity: 0.7;
-    bottom: 0;
+    opacity: 0.8;
+    bottom: 50px;
+    z-index: 3;
+    animation: leafFloat 4s ease-in-out infinite;
 }
 
-/* Animaciones del ramo */
-@keyframes flowerFloat {
+/* Animaciones */
+@keyframes centerCarFloat {
     0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-5px) rotate(1deg); }
+    50% { transform: translateY(-3px) rotate(2deg); }
+}
+
+@keyframes carOrbit {
+    0% { transform: rotate(0deg) translateX(140px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(140px) rotate(-360deg); }
+}
+
+@keyframes petalRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes leafFloat {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(2deg) scale(1.05); }
 }
 
 /* Mensaje de amor */
