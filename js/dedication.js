@@ -1,4 +1,4 @@
-// Crear ramo de girasoles con carritos Hot Wheels
+// Crear girasol con centro de carritos Hot Wheels
 function createHotWheelsBouquet() {
     const bouquetContainer = document.getElementById('hotwheels-bouquet');
     
@@ -9,85 +9,122 @@ function createHotWheelsBouquet() {
         'https://files.catbox.moe/9gecld.jpg'
     ];
     
-    // Posiciones para el ramo (agrupadas en el centro)
-    const positions = [
-        { left: 35, top: 30 },  // Esquina superior izquierda
-        { left: 50, top: 20 },  // Centro superior
-        { left: 65, top: 30 },  // Esquina superior derecha
-        { left: 30, top: 50 },  // Centro izquierdo
-        { left: 50, top: 45 },  // Centro del ramo
-        { left: 70, top: 50 },  // Centro derecho
-        { left: 40, top: 65 },  // Esquina inferior izquierda
-        { left: 50, top: 70 },  // Centro inferior
-        { left: 60, top: 65 }   // Esquina inferior derecha
-    ];
+    // Crear centro del girasol CON CARRITOS
+    createSunflowerCenterWithCars(bouquetContainer, carImages);
     
-    // Crear tallos
-    positions.forEach((pos, index) => {
-        const stem = document.createElement('div');
-        stem.className = 'flower-stem';
-        stem.style.left = `${pos.left}%`;
-        stem.style.height = `${150 + (pos.top / 100) * 100}px`;
-        stem.style.transform = `rotate(${Math.random() * 10 - 5}deg)`;
-        bouquetContainer.appendChild(stem);
-    });
+    // Crear pétalos del girasol
+    createSunflowerPetals(bouquetContainer);
     
-    // Crear flores con carritos
-    positions.forEach((pos, index) => {
-        const carType = index % carImages.length; // Rotar entre las 3 imágenes
-        createFlower(bouquetContainer, carImages[carType], pos, index);
-    });
+    // Crear carritos orbitando en el exterior
+    createOrbitingCars(bouquetContainer, carImages);
     
-    // Agregar follaje
-    createFoliage(bouquetContainer);
+    // Crear tallo principal
+    createMainStem(bouquetContainer);
+    
+    // Crear hojas
+    createSunflowerLeaves(bouquetContainer);
 }
 
-function createFlower(container, imgUrl, position, index) {
-    const flower = document.createElement('div');
-    flower.className = 'hotwheel-flower';
+function createSunflowerCenterWithCars(container, carImages) {
+    const center = document.createElement('div');
+    center.className = 'sunflower-center';
     
-    flower.style.left = `${position.left}%`;
-    flower.style.top = `${position.top}%`;
-    flower.style.zIndex = index + 1;
-    flower.style.animationDelay = `${index * 0.3}s`;
+    // Agregar múltiples carritos en el centro (formando un patrón)
+    const carsInCenter = 6;
     
-    // Crear pétalos
-    const petals = document.createElement('div');
-    petals.className = 'flower-petals';
-    
-    // Crear 6 pétalos alrededor
-    for (let i = 0; i < 6; i++) {
-        const petal = document.createElement('div');
-        petal.className = 'petal';
-        petals.appendChild(petal);
+    for (let i = 0; i < carsInCenter; i++) {
+        const carImg = document.createElement('img');
+        const carType = i % carImages.length;
+        carImg.src = carImages[carType];
+        carImg.alt = `Carrito Hot Wheels Centro`;
+        carImg.className = 'center-car';
+        
+        // Posicionar carritos en forma circular dentro del centro
+        const angle = (i / carsInCenter) * Math.PI * 2;
+        const radius = 40;
+        
+        carImg.style.position = 'absolute';
+        carImg.style.left = `calc(50% + ${Math.cos(angle) * radius}px)`;
+        carImg.style.top = `calc(50% + ${Math.sin(angle) * radius}px)`;
+        carImg.style.transform = `translate(-50%, -50%) rotate(${angle * 180 / Math.PI}deg)`;
+        carImg.style.animationDelay = `${i * 0.3}s`;
+        
+        center.appendChild(carImg);
     }
     
-    // Crear imagen del carrito (centro de los pétalos)
-    const carImg = document.createElement('img');
-    carImg.src = imgUrl;
-    carImg.alt = `Carrito Hot Wheels`;
-    carImg.className = 'car-image';
-    
-    // Agregar elementos al DOM
-    petals.appendChild(carImg);
-    flower.appendChild(petals);
-    container.appendChild(flower);
+    container.appendChild(center);
 }
 
-function createFoliage(container) {
-    // Agregar hojas decorativas en la base
+function createSunflowerPetals(container) {
+    const petalCount = 16;
+    
+    for (let i = 0; i < petalCount; i++) {
+        const petal = document.createElement('div');
+        petal.className = 'sunflower-petal';
+        
+        // Posicionar pétalos en círculo
+        const angle = (i / petalCount) * Math.PI * 2;
+        const radius = 90;
+        const centerX = 50;
+        const centerY = 50;
+        
+        petal.style.left = `${centerX + Math.cos(angle) * radius}%`;
+        petal.style.top = `${centerY + Math.sin(angle) * radius}%`;
+        petal.style.transform = `rotate(${angle * 180 / Math.PI}deg)`;
+        petal.style.animationDelay = `${i * 0.2}s`;
+        
+        container.appendChild(petal);
+    }
+}
+
+function createOrbitingCars(container, carImages) {
+    const carCount = 12;
+    
+    for (let i = 0; i < carCount; i++) {
+        const carFlower = document.createElement('div');
+        carFlower.className = 'car-flower';
+        
+        // Asignar imagen de carrito
+        const carType = i % carImages.length;
+        
+        const carImg = document.createElement('img');
+        carImg.src = carImages[carType];
+        carImg.alt = `Carrito Hot Wheels Orbital`;
+        carImg.className = 'outer-car-image';
+        carImg.style.setProperty('--car-rotation', `${(i / carCount) * 360}deg`);
+        
+        // Configurar animación orbital
+        carFlower.style.animationDelay = `${i * (25 / carCount)}s`;
+        
+        carFlower.appendChild(carImg);
+        container.appendChild(carFlower);
+    }
+}
+
+function createMainStem(container) {
+    const stem = document.createElement('div');
+    stem.className = 'flower-stem';
+    stem.style.left = '50%';
+    stem.style.transform = 'translateX(-50%)';
+    stem.style.height = '200px';
+    container.appendChild(stem);
+}
+
+function createSunflowerLeaves(container) {
     const leafPositions = [
-        { left: 25, bottom: 10 }, { left: 35, bottom: 15 }, 
-        { left: 45, bottom: 8 }, { left: 55, bottom: 12 },
-        { left: 65, bottom: 9 }, { left: 75, bottom: 14 }
+        { left: 45, rotation: -25, bottom: 80 },
+        { left: 48, rotation: 30, bottom: 120 },
+        { left: 52, rotation: -35, bottom: 90 },
+        { left: 55, rotation: 20, bottom: 110 }
     ];
     
-    leafPositions.forEach(pos => {
+    leafPositions.forEach((pos, index) => {
         const leaf = document.createElement('div');
-        leaf.className = 'flower-leaf';
+        leaf.className = 'sunflower-leaf';
         leaf.style.left = `${pos.left}%`;
-        leaf.style.bottom = `${pos.bottom}%`;
-        leaf.style.transform = `rotate(${Math.random() * 60 - 30}deg) scale(${0.7 + Math.random() * 0.3})`;
+        leaf.style.bottom = `${pos.bottom}px`;
+        leaf.style.transform = `rotate(${pos.rotation}deg)`;
+        leaf.style.animationDelay = `${index * 0.4}s`;
         container.appendChild(leaf);
     });
 }
