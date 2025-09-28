@@ -1,67 +1,83 @@
-// Mensajes de amor para la dedicatoria
-const loveMessages = [
-    "Eres el motor que acelera mi corazón 💖",
-    "Como un Hot Wheels, nuestra amor es rápido y emocionante 🏎️",
-    "Cada carrito representa una aventura juntos",
-    "Eres mi tesoro más preciado, más que cualquier carrito",
-    "Nuestro amor corre más rápido que un superdeportivo",
-    "Eres la pieza que completa mi colección perfecta"
-];
-
-// Función para cambiar mensajes automáticamente
-function changeLoveMessage() {
-    const messageElement = document.querySelector('.love-message p');
-    let currentIndex = 0;
+// Crear ramo de girasoles con carritos Hot Wheels
+function createHotWheelsBouquet() {
+    const bouquetContainer = document.getElementById('hotwheels-bouquet');
     
-    setInterval(() => {
-        currentIndex = (currentIndex + 1) % loveMessages.length;
-        messageElement.style.opacity = 0;
-        
-        setTimeout(() => {
-            messageElement.textContent = loveMessages[currentIndex];
-            messageElement.style.opacity = 1;
-        }, 500);
-        
-    }, 4000);
-}
-
-// Función para crear carritos flotantes
-function createFloatingCars() {
-    const floatingContainer = document.createElement('div');
-    floatingContainer.className = 'floating-cars';
-    document.querySelector('.container').appendChild(floatingContainer);
+    // URLs de las imágenes de carritos (usaré placeholders por seguridad)
+    const carImages = [
+        'https://files.catbox.moe/plnshz.jpg',
+        'https://files.catbox.moe/0e11p1.jpg', 
+        'https://files.catbox.moe/9gecld.jpg'
+    ];
     
-    const carEmojis = ['🏎️', '🚗', '🚓', '🚙', '🏁', '🚀'];
-    
-    carEmojis.forEach((emoji, index) => {
-        const carElement = document.createElement('div');
-        carElement.className = 'car-float';
-        carElement.textContent = emoji;
-        carElement.style.top = `${20 + (index * 15)}%`;
-        carElement.style.animationDelay = `${index * 0.5}s`;
-        floatingContainer.appendChild(carElement);
-    });
-}
-
-// Inicializar cuando la página cargue
-document.addEventListener('DOMContentLoaded', function() {
-    changeLoveMessage();
-    createFloatingCars();
-    
-    // Efecto de escritura en el título
-    const originalTitle = "Para Mi Amor 💖";
-    let titleElement = document.querySelector('.love-title');
-    let i = 0;
-    
-    function typeWriter() {
-        if (i < originalTitle.length) {
-            titleElement.innerHTML = originalTitle.substring(0, i + 1) + '<span class="blink">|</span>';
-            i++;
-            setTimeout(typeWriter, 100);
-        } else {
-            titleElement.innerHTML = originalTitle;
-        }
+    // Crear tallos
+    for (let i = 0; i < 9; i++) {
+        const stem = document.createElement('div');
+        stem.className = 'flower-stem';
+        stem.style.left = `${20 + (i % 3) * 30}%`;
+        stem.style.bottom = '0px';
+        stem.style.height = `${200 + Math.random() * 50}px`;
+        stem.style.transform = `rotate(${Math.random() * 20 - 10}deg)`;
+        bouquetContainer.appendChild(stem);
     }
     
-    typeWriter();
+    // Crear "flores" (carritos)
+    carImages.forEach((imgUrl, index) => {
+        for (let i = 0; i < 3; i++) { // 3 flores por cada tipo de carrito
+            createFlower(bouquetContainer, imgUrl, index, i);
+        }
+    });
+    
+    // Agregar follaje
+    createFoliage(bouquetContainer);
+}
+
+function createFlower(container, imgUrl, carType, flowerIndex) {
+    const flower = document.createElement('div');
+    flower.className = 'hotwheel-flower';
+    
+    // Posicionar en forma de ramo
+    const angle = (flowerIndex / 3) * Math.PI * 2;
+    const radius = 80 + carType * 40;
+    const left = 50 + Math.cos(angle) * radius;
+    const top = 50 + Math.sin(angle) * radius;
+    
+    flower.style.left = `${left}%`;
+    flower.style.top = `${top}%`;
+    flower.style.zIndex = carType + 1;
+    
+    // Crear imagen del carrito
+    const carImg = document.createElement('img');
+    carImg.src = imgUrl;
+    carImg.alt = `Carrito Hot Wheels ${carType + 1}`;
+    carImg.className = 'car-image';
+    
+    // Crear pétalos alrededor del carrito
+    const petals = document.createElement('div');
+    petals.className = 'flower-petals';
+    
+    // Agregar elementos al DOM
+    petals.appendChild(carImg);
+    flower.appendChild(petals);
+    container.appendChild(flower);
+    
+    // Animación flotante
+    flower.style.animation = `flowerFloat ${3 + carType * 0.5}s ease-in-out infinite`;
+    flower.style.animationDelay = `${(carType + flowerIndex) * 0.3}s`;
+}
+
+function createFoliage(container) {
+    // Agregar hojas decorativas
+    for (let i = 0; i < 12; i++) {
+        const leaf = document.createElement('div');
+        leaf.className = 'flower-leaf';
+        leaf.style.left = `${15 + (i % 4) * 25}%`;
+        leaf.style.bottom = `${20 + (Math.floor(i / 4)) * 30}%`;
+        leaf.style.transform = `rotate(${Math.random() * 60 - 30}deg) scale(${0.5 + Math.random() * 0.5})`;
+        container.appendChild(leaf);
+    }
+}
+
+// Inicializar cuando cargue la página
+document.addEventListener('DOMContentLoaded', function() {
+    createHotWheelsBouquet();
 });
