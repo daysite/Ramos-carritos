@@ -53,11 +53,35 @@ body {
     border: 3px solid rgba(255,255,255,0.3);
 }
 
-/* GIRASOL INDIVIDUAL */
+/* CONTENEDOR DE CADA FLOR CON SU TALLO */
+.flower-with-stem {
+    position: absolute;
+    bottom: 0;
+    transform-origin: bottom center;
+}
+
+/* Tallos individuales */
+.flower-stem {
+    position: absolute;
+    width: 4px;
+    background: linear-gradient(to top, #228B22, #32CD32);
+    border-radius: 2px;
+    transform-origin: bottom center;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+/* GIRASOL en la punta del tallo */
 .sunflower {
     position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
     transform-origin: center;
     animation: flowerFloat 4s ease-in-out infinite;
+    z-index: 10;
 }
 
 /* Centro del girasol (SOLO IMAGEN CIRCULAR) */
@@ -69,7 +93,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 10;
+    z-index: 15;
     overflow: hidden;
 }
 
@@ -91,21 +115,10 @@ body {
     background: linear-gradient(to bottom, #FFD700, #FFA500);
     border-radius: 50% 60% 50% 60%;
     transform-origin: center;
-    z-index: 5;
+    z-index: 12;
 }
 
-/* Tallos individuales */
-.flower-stem {
-    position: absolute;
-    width: 4px;
-    background: linear-gradient(to top, #228B22, #32CD32);
-    border-radius: 2px;
-    transform-origin: bottom center;
-    bottom: 0;
-    z-index: 1;
-}
-
-/* Hojas */
+/* Hojas en los tallos */
 .flower-leaf {
     position: absolute;
     width: 18px;
@@ -113,14 +126,15 @@ body {
     background: #32CD32;
     border-radius: 50% 0 50% 0;
     opacity: 0.7;
-    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 2;
 }
 
 /* Animaciones */
 @keyframes flowerFloat {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-3px) rotate(0.5deg); }
+    0%, 100% { transform: translateX(-50%) translateY(0px) rotate(0deg); }
+    50% { transform: translateX(-50%) translateY(-3px) rotate(0.5deg); }
 }
 
 /* Mensaje de amor */
