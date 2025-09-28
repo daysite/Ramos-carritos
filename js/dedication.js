@@ -12,31 +12,38 @@ function createHotWheelsBouquet() {
     // Posiciones para los girasoles (formando un ramo compacto)
     const sunflowerPositions = [
         // Girasol principal (centro)
-        { left: 50, top: 45 },
-        // Girasoles alrededor - TODOS DEL MISMO TAMAÑO
-        { left: 35, top: 40 },
-        { left: 65, top: 40 },
-        { left: 40, top: 55 },
-        { left: 60, top: 55 },
-        { left: 30, top: 50 },
-        { left: 70, top: 50 }
+        { left: 50, top: 45, stemHeight: 160 },
+        // Girasoles alrededor - MÁS PEQUEÑOS
+        { left: 35, top: 40, stemHeight: 150 },
+        { left: 65, top: 40, stemHeight: 150 },
+        { left: 40, top: 55, stemHeight: 140 },
+        { left: 60, top: 55, stemHeight: 140 },
+        { left: 30, top: 50, stemHeight: 145 },
+        { left: 70, top: 50, stemHeight: 145 }
     ];
     
-    // Crear cada girasol
+    // Crear cada girasol CON SU TALLO CORRESPONDIENTE
     sunflowerPositions.forEach((position, index) => {
-        createSunflower(bouquetContainer, carImages, position, index);
+        createSunflowerWithStem(bouquetContainer, carImages, position, index);
     });
     
     // Crear hojas adicionales
     createAdditionalLeaves(bouquetContainer);
 }
 
-function createSunflower(container, carImages, position, index) {
-    // Crear contenedor del girasol
+function createSunflowerWithStem(container, carImages, position, index) {
+    // PRIMERO crear el tallo
+    const stem = document.createElement('div');
+    stem.className = 'flower-stem';
+    stem.style.left = `${position.left}%`;
+    stem.style.height = `${position.stemHeight}px`;
+    stem.style.transform = `translateX(-50%) rotate(${Math.random() * 6 - 3}deg)`;
+    
+    // LUEGO crear la flor en la punta del tallo
     const sunflower = document.createElement('div');
     sunflower.className = 'sunflower';
     sunflower.style.left = `${position.left}%`;
-    sunflower.style.top = `${position.top}%`;
+    sunflower.style.top = `calc(${position.top}% - ${position.stemHeight * 0.8}px)`;
     sunflower.style.transform = `translate(-50%, -50%)`;
     sunflower.style.animationDelay = `${index * 0.2}s`;
     
@@ -47,17 +54,16 @@ function createSunflower(container, carImages, position, index) {
         petal.className = 'petal';
         
         const angle = (i / petalCount) * Math.PI * 2;
-        const petalDistance = 42; // Distancia fija para todos
+        const petalDistance = 30; // Distancia más pequeña
         
         petal.style.left = `50%`;
         petal.style.top = `50%`;
         petal.style.transform = `translate(-50%, -50%) rotate(${angle * 180 / Math.PI}deg) translateX(${petalDistance}px)`;
-        // SIN ANIMACIÓN - PÉTALOS FIJOS
         
         sunflower.appendChild(petal);
     }
     
-    // Crear centro del girasol con carrito
+    // Crear centro del girasol SOLO CON IMAGEN CIRCULAR
     const center = document.createElement('div');
     center.className = 'sunflower-center';
     
@@ -71,22 +77,14 @@ function createSunflower(container, carImages, position, index) {
     center.appendChild(carImg);
     sunflower.appendChild(center);
     
-    // Crear tallo (altura similar para todos)
-    const stemHeight = 150 + Math.random() * 30;
-    const stem = document.createElement('div');
-    stem.className = 'flower-stem';
-    stem.style.left = `${position.left}%`;
-    stem.style.height = `${stemHeight}px`;
-    stem.style.transform = `translateX(-50%) rotate(${Math.random() * 8 - 4}deg)`;
-    
     // Crear hoja en el tallo
     const leaf = document.createElement('div');
     leaf.className = 'flower-leaf';
     leaf.style.left = `${position.left}%`;
-    leaf.style.bottom = `${stemHeight * 0.4}px`;
-    leaf.style.transform = `translateX(-50%) rotate(${Math.random() * 30 - 15}deg)`;
+    leaf.style.bottom = `${position.stemHeight * 0.5}px`;
+    leaf.style.transform = `translateX(-50%) rotate(${Math.random() * 25 - 12}deg)`;
     
-    // Agregar elementos al DOM
+    // Agregar elementos al DOM EN ORDEN CORRECTO
     container.appendChild(stem);
     container.appendChild(leaf);
     container.appendChild(sunflower);
@@ -95,11 +93,11 @@ function createSunflower(container, carImages, position, index) {
 function createAdditionalLeaves(container) {
     // Agregar hojas adicionales en la base
     const additionalLeaves = [
-        { left: 40, bottom: 25 },
-        { left: 50, bottom: 30 },
-        { left: 60, bottom: 28 },
-        { left: 45, bottom: 35 },
-        { left: 55, bottom: 32 }
+        { left: 40, bottom: 20 },
+        { left: 50, bottom: 25 },
+        { left: 60, bottom: 22 },
+        { left: 45, bottom: 30 },
+        { left: 55, bottom: 28 }
     ];
     
     additionalLeaves.forEach(leafPos => {
@@ -107,7 +105,7 @@ function createAdditionalLeaves(container) {
         leaf.className = 'flower-leaf';
         leaf.style.left = `${leafPos.left}%`;
         leaf.style.bottom = `${leafPos.bottom}px`;
-        leaf.style.transform = `rotate(${Math.random() * 50 - 25}deg) scale(${0.7 + Math.random() * 0.3})`;
+        leaf.style.transform = `rotate(${Math.random() * 40 - 20}deg) scale(${0.6 + Math.random() * 0.3})`;
         container.appendChild(leaf);
     });
 }
