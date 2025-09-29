@@ -21,8 +21,8 @@ function createHotWheelsBouquet() {
         { left: 54, stemHeight: 170, delay: 1800 }  // Derecha interior
     ];
     
-    // Crear efecto de puntos cayendo
-    createFallingDots(bouquetContainer);
+    // Crear efecto de puntos cayendo en TODA LA PANTALLA
+    createFallingDots();
     
     // Crear cada flor CON ANIMACIÓN UNO POR UNO
     flowerPositions.forEach((position, index) => {
@@ -37,26 +37,33 @@ function createHotWheelsBouquet() {
     }, 2100);
 }
 
-function createFallingDots(container) {
-    // Crear múltiples puntos cayendo
-    const dotCount = 20;
+function createFallingDots() {
+    // Crear múltiples puntos cayendo en TODA LA PANTALLA
+    const dotCount = 30; // Más puntos para toda la pantalla
     
     for (let i = 0; i < dotCount; i++) {
         const dot = document.createElement('div');
         dot.className = 'falling-dot';
         
-        // Posición aleatoria en el ancho
-        dot.style.left = `${Math.random() * 100}%`;
+        // Posición aleatoria en TODA LA PANTALLA
+        dot.style.left = `${Math.random() * 100}vw`;
         
         // Retraso aleatorio para que no caigan todos a la vez
-        dot.style.animationDelay = `${Math.random() * 5}s`;
+        dot.style.animationDelay = `${Math.random() * 6}s`;
+        
+        // Duración aleatoria
+        dot.style.animationDuration = `${3 + Math.random() * 4}s`;
         
         // Tamaño ligeramente variable
-        const size = 2 + Math.random() * 3;
+        const size = 2 + Math.random() * 4;
         dot.style.width = `${size}px`;
         dot.style.height = `${size}px`;
         
-        container.appendChild(dot);
+        // Opacidad variable
+        dot.style.opacity = `${0.3 + Math.random() * 0.5}`;
+        
+        // Agregar al body para toda la pantalla
+        document.body.appendChild(dot);
     }
 }
 
@@ -79,14 +86,13 @@ function createFlowerWithStem(container, carImages, position, index) {
     sunflower.style.top = `${flowerTop}px`;
     sunflower.style.animationDelay = '1.2s'; // Aparece después del tallo
     
-    // Crear pétalos con animación
+    // Crear pétalos con animación - MÁS PEQUEÑOS
     const petalCount = 12;
     for (let i = 0; i < petalCount; i++) {
         const petal = document.createElement('div');
         petal.className = 'petal';
         
         const angle = (i / petalCount) * Math.PI * 2;
-        const petalDistance = 30;
         
         petal.style.left = `50%`;
         petal.style.top = `50%`;
