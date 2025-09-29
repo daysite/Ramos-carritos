@@ -21,6 +21,9 @@ function createHotWheelsBouquet() {
         { left: 54, stemHeight: 170, delay: 1800 }  // Derecha interior
     ];
     
+    // Crear efecto de puntos cayendo
+    createFallingDots(bouquetContainer);
+    
     // Crear cada flor CON ANIMACIÓN UNO POR UNO
     flowerPositions.forEach((position, index) => {
         setTimeout(() => {
@@ -32,6 +35,29 @@ function createHotWheelsBouquet() {
     setTimeout(() => {
         createAdditionalLeaves(bouquetContainer);
     }, 2100);
+}
+
+function createFallingDots(container) {
+    // Crear múltiples puntos cayendo
+    const dotCount = 20;
+    
+    for (let i = 0; i < dotCount; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'falling-dot';
+        
+        // Posición aleatoria en el ancho
+        dot.style.left = `${Math.random() * 100}%`;
+        
+        // Retraso aleatorio para que no caigan todos a la vez
+        dot.style.animationDelay = `${Math.random() * 5}s`;
+        
+        // Tamaño ligeramente variable
+        const size = 2 + Math.random() * 3;
+        dot.style.width = `${size}px`;
+        dot.style.height = `${size}px`;
+        
+        container.appendChild(dot);
+    }
 }
 
 function createFlowerWithStem(container, carImages, position, index) {
@@ -70,7 +96,7 @@ function createFlowerWithStem(container, carImages, position, index) {
         sunflower.appendChild(petal);
     }
     
-    // Crear centro con imagen circular del carrito
+    // Crear centro con imagen circular del carrito - BORDE AZUL
     const center = document.createElement('div');
     center.className = 'sunflower-center';
     
