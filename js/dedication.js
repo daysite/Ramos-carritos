@@ -1,4 +1,4 @@
-// Crear ramo de girasoles con animación de crecimiento uno por uno
+// Crear ramo de girasoles con hojas pegadas al tallo
 function createHotWheelsBouquet() {
     const bouquetContainer = document.getElementById('hotwheels-bouquet');
     
@@ -37,11 +37,11 @@ function createFlowerWithGrowthAnimation(container, carImages, position, index) 
     const flowerTop = 500 - position.stemHeight;
     
     // 1. PRIMERO crear tallo con animación de crecimiento
-    createGrowingStem(container, position, index);
+    const stemData = createGrowingStem(container, position, index);
     
-    // 2. LUEGO crear hojas (después del tallo)
+    // 2. LUEGO crear hojas PEGADAS AL TALLO
     setTimeout(() => {
-        createLeavesBothSides(container, position, index);
+        createLeavesOnStem(container, position, index, stemData);
     }, 1000);
     
     // 3. FINALMENTE crear flor (después de las hojas)
@@ -79,70 +79,81 @@ function createGrowingStem(container, position, index) {
         `M50,500 C40,${460 + (500 - stemHeight)/10} 60,${400 + (500 - stemHeight)/5} 50,${flowerY}`
     ];
     
-    path.setAttribute("d", organicPaths[index % organicPaths.length]);
+    const pathData = organicPaths[index % organicPaths.length];
+    path.setAttribute("d", pathData);
     path.setAttribute("class", "stem-path");
     path.setAttribute("fill", "none");
     
     svg.appendChild(path);
     stemSvg.appendChild(svg);
     container.appendChild(stemSvg);
+    
+    // Devolver datos del tallo para posicionar hojas
+    return {
+        pathData: pathData,
+        left: position.left
+    };
 }
 
-function createLeavesBothSides(container, position, index) {
-    // Crear 2 hojas en cada lado del tallo (4 hojas en total)
+function createLeavesOnStem(container, position, index, stemData) {
+    // Crear 2 pares de hojas PEGADAS AL TALLO
     const leafPairs = 2;
     
     for (let i = 0; i < leafPairs; i++) {
-        // Hoja IZQUIERDA
-        const leafLeft = document.createElement('div');
-        leafLeft.className = 'leaf leaf-left';
+        // Calcular posición en el tallo (40% y 70% de la altura)
+        const stemProgress = 0.3 + (i * 0.35); // 30% y 65% de la altura
         
-        // Posición en el lado izquierdo del tallo
-        const leafHeightLeft = 500 - (position.stemHeight * (0.4 + (i * 0.3)));
-        const leafRotationLeft = -25 - (Math.random() * 15);
+        // Hoja IZQUIERDA - PEGADA AL TALLO
+        const leafLeft = createLeafAtStemPosition(container, position, stemData, stemProgress, 'left', i);
         
-        leafLeft.style.left = `calc(${position.left}% - 20px)`;
-        leafLeft.style.top = `${leafHeightLeft}px`;
-        leafLeft.style.setProperty('--leaf-rotation', `${leafRotationLeft}deg`);
-        leafLeft.style.animationDelay = `${i * 0.2}s`;
-        
-        // SVG para hoja izquierda
-        createLeafSVG(leafLeft, 'left');
-        container.appendChild(leafLeft);
-        
-        // Hoja DERECHA
-        const leafRight = document.createElement('div');
-        leafRight.className = 'leaf leaf-right';
-        
-        // Posición en el lado derecho del tallo
-        const leafHeightRight = 500 - (position.stemHeight * (0.5 + (i * 0.25)));
-        const leafRotationRight = 25 + (Math.random() * 15);
-        
-        leafRight.style.left = `calc(${position.left}% + 20px)`;
-        leafRight.style.top = `${leafHeightRight}px`;
-        leafRight.style.setProperty('--leaf-rotation', `${leafRotationRight}deg`);
-        leafRight.style.animationDelay = `${i * 0.2 + 0.1}s`;
-        
-        // SVG para hoja derecha
-        createLeafSVG(leafRight, 'right');
-        container.appendChild(leafRight);
+        // Hoja DERECHA - PEGADA AL TALLO (ligeramente más arriba)
+        const leafRight = createLeafAtStemPosition(container, position, stemData, stemProgress - 0.05, 'right', i);
     }
+}
+
+function createLeafAtStemPosition(container, position, stemData, stemProgress, side, pairIndex) {
+    const leaf = document.createElement('div');
+    leaf.className = `leaf leaf-${side}`;
+    
+    // Calcular posición basada en el progreso del tallo
+    const leafHeight = 500 - (position.stemHeight * stemProgress);
+    
+    // Posición horizontal basada en el lado
+    const horizontalOffset = side === 'left' ? -18 : 18;
+    
+    // Rotación natural según el lado
+    const baseRotation = side === 'left' ? -25 : 25;
+    const variation = (Math.random() * 10) - 5; // Pequeña variación
+    const leafRotation = baseRotation + variation;
+    
+    leaf.style.left = `calc(${position.left}% + ${horizontalOffset}px)`;
+    leaf.style.top = `${leafHeight}px`;
+    leaf.style.setProperty('--leaf-rotation', `${leafRotation}deg`);
+    leaf.style.animationDelay = `${pairIndex * 0.2}s`;
+    
+    // SVG para hoja
+    createLeafSVG(leaf, side);
+    container.appendChild(leaf);
+    
+    return leaf;
 }
 
 function createLeafSVG(leafElement, side) {
     const svgNS = "http://www.w3.org/2000/svg";
     const svg = document.createElementNS(svgNS, "svg");
-    svg.setAttribute("width", "25");
-    svg.setAttribute("height", "15");
-    svg.setAttribute("viewBox", "0 0 25 15");
+    svg.setAttribute("width", "20");
+    svg.setAttribute("height", "12");
+    svg.setAttribute("viewBox", "0 0 20 12");
     
     const leafPath = document.createElementNS(svgNS, "path");
     
-    // Forma de hoja ligeramente diferente según el lado
+    // Forma de hoja orientada correctamente según el lado
     if (side === 'left') {
-        leafPath.setAttribute("d", "M12,0 C16,4 18,7 12,15 C6,7 8,4 12,0");
+        // Hoja izquierda - apunta hacia la izquierda
+        leafPath.setAttribute("d", "M10,0 C14,3 16,6 10,12 C6,6 8,3 10,0");
     } else {
-        leafPath.setAttribute("d", "M12,0 C8,4 6,7 12,15 C18,7 16,4 12,0");
+        // Hoja derecha - apunta hacia la derecha
+        leafPath.setAttribute("d", "M10,0 C6,3 4,6 10,12 C14,6 12,3 10,0");
     }
     
     leafPath.setAttribute("class", "leaf-svg");
@@ -156,7 +167,7 @@ function createFlowerAtStemTop(container, carImages, position, index, flowerTop)
     sunflower.className = 'sunflower';
     sunflower.style.left = `${position.left}%`;
     sunflower.style.top = `${flowerTop}px`;
-    sunflower.style.animationDelay = '0s'; // Aparece inmediatamente después del delay
+    sunflower.style.animationDelay = '0s';
     
     // Crear pétalos
     const petalCount = 12;
