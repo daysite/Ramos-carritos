@@ -42,7 +42,7 @@ body {
     align-items: center;
 }
 
-/* Contenedor del ramo - SIN BORDE */
+/* Contenedor del ramo */
 #hotwheels-bouquet {
     position: relative;
     width: 100%;
@@ -52,32 +52,23 @@ body {
     overflow: hidden;
 }
 
-/* TALLOS REALISTAS CON CURVAS */
-.flower-stem {
+/* TALLOS SVG ORGÁNICOS */
+.stem-svg {
     position: absolute;
-    width: 3px;
-    background: linear-gradient(to top, #228B22, #32CD32);
-    border-radius: 1px;
-    transform-origin: bottom center;
     bottom: 0;
     z-index: 1;
     opacity: 0;
     animation: growStem 2s ease-out forwards;
 }
 
-/* TALLOS CON CURVAS NATURALES */
-.stem-curve {
-    position: absolute;
-    width: 3px;
-    background: linear-gradient(to top, #228B22, #32CD32);
-    border-radius: 1px;
-    transform-origin: bottom center;
-    z-index: 1;
-    opacity: 0;
-    animation: growCurve 2s ease-out forwards;
+.stem-path {
+    stroke: #32CD32;
+    stroke-width: 3;
+    fill: none;
+    stroke-linecap: round;
 }
 
-/* GIRASOL en la punta del tallo - CON ANIMACIÓN DE APARICIÓN */
+/* GIRASOL en la punta del tallo */
 .sunflower {
     position: absolute;
     transform-origin: center;
@@ -86,7 +77,7 @@ body {
     animation: appearFlower 1s ease-out forwards;
 }
 
-/* Centro del girasol (SOLO IMAGEN CIRCULAR) */
+/* Centro del girasol */
 .sunflower-center {
     position: relative;
     width: 50px;
@@ -99,7 +90,7 @@ body {
     overflow: hidden;
 }
 
-/* Imagen del carrito en forma CIRCULAR - BORDE AZUL */
+/* Imagen del carrito */
 .car-center-image {
     width: 45px;
     height: 45px;
@@ -109,7 +100,7 @@ body {
     box-shadow: 0 0 15px rgba(74, 144, 226, 0.8);
 }
 
-/* Pétalos del girasol - COLOR AZUL - MÁS PEQUEÑOS */
+/* Pétalos del girasol */
 .petal {
     position: absolute;
     width: 15px;
@@ -122,46 +113,27 @@ body {
     animation: appearPetals 0.8s ease-out forwards;
 }
 
-/* Hojas en los tallos */
-.flower-leaf {
+/* Hojas orgánicas */
+.leaf {
     position: absolute;
-    width: 15px;
-    height: 8px;
-    background: #32CD32;
-    border-radius: 50% 0 50% 0;
-    opacity: 0;
     z-index: 2;
+    opacity: 0;
     animation: appearLeaf 1s ease-out forwards;
+}
+
+.leaf-svg {
+    fill: #32CD32;
 }
 
 /* ANIMACIONES */
 @keyframes growStem {
     0% {
-        height: 0px;
         opacity: 0;
-    }
-    50% {
-        opacity: 1;
+        transform: scaleY(0);
     }
     100% {
-        height: var(--final-height);
         opacity: 1;
-    }
-}
-
-@keyframes growCurve {
-    0% {
-        height: 0px;
-        opacity: 0;
-        transform: rotate(0deg);
-    }
-    50% {
-        opacity: 1;
-    }
-    100% {
-        height: var(--curve-height);
-        opacity: 1;
-        transform: rotate(var(--curve-rotation));
+        transform: scaleY(1);
     }
 }
 
@@ -193,15 +165,15 @@ body {
 @keyframes appearLeaf {
     0% {
         opacity: 0;
-        transform: translateX(-50%) rotate(0deg) scale(0);
+        transform: scale(0) rotate(0deg);
     }
     100% {
-        opacity: 0.7;
-        transform: translateX(-50%) rotate(var(--leaf-rotation)) scale(1);
+        opacity: 0.8;
+        transform: scale(1) rotate(var(--leaf-rotation));
     }
 }
 
-/* Puntos azules cayendo en TODA LA PANTALLA */
+/* Puntos azules cayendo */
 .falling-dot {
     position: fixed;
     width: 3px;
