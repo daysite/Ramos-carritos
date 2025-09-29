@@ -52,13 +52,11 @@ body {
     overflow: hidden;
 }
 
-/* TALLOS SVG ORGÁNICOS - TAMAÑO CORRECTO */
+/* TALLOS SVG ORGÁNICOS - CON ANIMACIÓN DE CRECIMIENTO */
 .stem-svg {
     position: absolute;
     bottom: 0;
     z-index: 1;
-    opacity: 0;
-    animation: growStem 2s ease-out forwards;
     width: 100px;
     height: 500px;
 }
@@ -68,9 +66,12 @@ body {
     stroke-width: 3;
     fill: none;
     stroke-linecap: round;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: drawStem 2s ease-out forwards;
 }
 
-/* GIRASOL en la punta del tallo - POSICIÓN CORRECTA */
+/* GIRASOL en la punta del tallo */
 .sunflower {
     position: absolute;
     transform-origin: center;
@@ -115,27 +116,32 @@ body {
     animation: appearPetals 0.8s ease-out forwards;
 }
 
-/* Hojas orgánicas */
+/* Hojas orgánicas - AMBOS LADOS */
 .leaf {
     position: absolute;
     z-index: 2;
     opacity: 0;
-    animation: appearLeaf 1s ease-out forwards;
 }
 
 .leaf-svg {
     fill: #32CD32;
 }
 
+.leaf-left {
+    animation: appearLeafLeft 1s ease-out forwards;
+}
+
+.leaf-right {
+    animation: appearLeafRight 1s ease-out forwards;
+}
+
 /* ANIMACIONES */
-@keyframes growStem {
+@keyframes drawStem {
     0% {
-        opacity: 0;
-        transform: scaleY(0);
+        stroke-dashoffset: 1000;
     }
     100% {
-        opacity: 1;
-        transform: scaleY(1);
+        stroke-dashoffset: 0;
     }
 }
 
@@ -164,14 +170,25 @@ body {
     }
 }
 
-@keyframes appearLeaf {
+@keyframes appearLeafLeft {
     0% {
         opacity: 0;
-        transform: scale(0) rotate(0deg);
+        transform: translateX(-10px) scale(0) rotate(-10deg);
     }
     100% {
         opacity: 0.8;
-        transform: scale(1) rotate(var(--leaf-rotation));
+        transform: translateX(0px) scale(1) rotate(var(--leaf-rotation));
+    }
+}
+
+@keyframes appearLeafRight {
+    0% {
+        opacity: 0;
+        transform: translateX(10px) scale(0) rotate(10deg);
+    }
+    100% {
+        opacity: 0.8;
+        transform: translateX(0px) scale(1) rotate(var(--leaf-rotation));
     }
 }
 
