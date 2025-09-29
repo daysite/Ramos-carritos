@@ -1,4 +1,4 @@
-// Crear ramo de girasoles con hojas pegadas al tallo
+// Crear ramo de girasoles con hojas perfectamente ubicadas
 function createHotWheelsBouquet() {
     const bouquetContainer = document.getElementById('hotwheels-bouquet');
     
@@ -37,11 +37,11 @@ function createFlowerWithGrowthAnimation(container, carImages, position, index) 
     const flowerTop = 500 - position.stemHeight;
     
     // 1. PRIMERO crear tallo con animación de crecimiento
-    const stemData = createGrowingStem(container, position, index);
+    createGrowingStem(container, position, index);
     
-    // 2. LUEGO crear hojas PEGADAS AL TALLO
+    // 2. LUEGO crear hojas PERFECTAMENTE UBICADAS
     setTimeout(() => {
-        createLeavesOnStem(container, position, index, stemData);
+        createPerfectLeaves(container, position, index);
     }, 1000);
     
     // 3. FINALMENTE crear flor (después de las hojas)
@@ -79,84 +79,87 @@ function createGrowingStem(container, position, index) {
         `M50,500 C40,${460 + (500 - stemHeight)/10} 60,${400 + (500 - stemHeight)/5} 50,${flowerY}`
     ];
     
-    const pathData = organicPaths[index % organicPaths.length];
-    path.setAttribute("d", pathData);
+    path.setAttribute("d", organicPaths[index % organicPaths.length]);
     path.setAttribute("class", "stem-path");
     path.setAttribute("fill", "none");
     
     svg.appendChild(path);
     stemSvg.appendChild(svg);
     container.appendChild(stemSvg);
-    
-    // Devolver datos del tallo para posicionar hojas
-    return {
-        pathData: pathData,
-        left: position.left
-    };
 }
 
-function createLeavesOnStem(container, position, index, stemData) {
-    // Crear 2 pares de hojas PEGADAS AL TALLO
+function createPerfectLeaves(container, position, index) {
+    // Crear 2 pares de hojas PERFECTAMENTE UBICADAS
     const leafPairs = 2;
     
     for (let i = 0; i < leafPairs; i++) {
-        // Calcular posición en el tallo (40% y 70% de la altura)
-        const stemProgress = 0.3 + (i * 0.35); // 30% y 65% de la altura
+        // POSICIONES EXACTAS EN EL TALLO
+        const leafPositions = [
+            // Primer par de hojas (más abajo)
+            { 
+                leftHeight: 0.7,  // 70% de la altura del tallo
+                rightHeight: 0.65, // 65% de la altura del tallo  
+                leftOffset: -12,
+                rightOffset: 12,
+                leftRotation: -35,
+                rightRotation: 35
+            },
+            // Segundo par de hojas (más arriba)
+            { 
+                leftHeight: 0.4,  // 40% de la altura del tallo
+                rightHeight: 0.35, // 35% de la altura del tallo
+                leftOffset: -14,
+                rightOffset: 14,
+                leftRotation: -25,
+                rightRotation: 25
+            }
+        ];
         
-        // Hoja IZQUIERDA - PEGADA AL TALLO
-        const leafLeft = createLeafAtStemPosition(container, position, stemData, stemProgress, 'left', i);
+        const pos = leafPositions[i];
         
-        // Hoja DERECHA - PEGADA AL TALLO (ligeramente más arriba)
-        const leafRight = createLeafAtStemPosition(container, position, stemData, stemProgress - 0.05, 'right', i);
+        // Hoja IZQUIERDA - POSICIÓN EXACTA
+        const leafLeft = document.createElement('div');
+        leafLeft.className = 'leaf leaf-left';
+        
+        const leftHeight = 500 - (position.stemHeight * pos.leftHeight);
+        
+        leafLeft.style.left = `calc(${position.left}% + ${pos.leftOffset}px)`;
+        leafLeft.style.top = `${leftHeight}px`;
+        leafLeft.style.setProperty('--leaf-rotation', `${pos.leftRotation}deg`);
+        leafLeft.style.animationDelay = `${i * 0.2}s`;
+        
+        createLeafSVG(leafLeft, 'left');
+        container.appendChild(leafLeft);
+        
+        // Hoja DERECHA - POSICIÓN EXACTA
+        const leafRight = document.createElement('div');
+        leafRight.className = 'leaf leaf-right';
+        
+        const rightHeight = 500 - (position.stemHeight * pos.rightHeight);
+        
+        leafRight.style.left = `calc(${position.left}% + ${pos.rightOffset}px)`;
+        leafRight.style.top = `${rightHeight}px`;
+        leafRight.style.setProperty('--leaf-rotation', `${pos.rightRotation}deg`);
+        leafRight.style.animationDelay = `${i * 0.2 + 0.1}s`;
+        
+        createLeafSVG(leafRight, 'right');
+        container.appendChild(leafRight);
     }
-}
-
-function createLeafAtStemPosition(container, position, stemData, stemProgress, side, pairIndex) {
-    const leaf = document.createElement('div');
-    leaf.className = `leaf leaf-${side}`;
-    
-    // Calcular posición basada en el progreso del tallo
-    const leafHeight = 500 - (position.stemHeight * stemProgress);
-    
-    // Posición horizontal basada en el lado
-    const horizontalOffset = side === 'left' ? -18 : 18;
-    
-    // Rotación natural según el lado
-    const baseRotation = side === 'left' ? -25 : 25;
-    const variation = (Math.random() * 10) - 5; // Pequeña variación
-    const leafRotation = baseRotation + variation;
-    
-    leaf.style.left = `calc(${position.left}% + ${horizontalOffset}px)`;
-    leaf.style.top = `${leafHeight}px`;
-    leaf.style.setProperty('--leaf-rotation', `${leafRotation}deg`);
-    leaf.style.animationDelay = `${pairIndex * 0.2}s`;
-    
-    // SVG para hoja
-    createLeafSVG(leaf, side);
-    container.appendChild(leaf);
-    
-    return leaf;
 }
 
 function createLeafSVG(leafElement, side) {
     const svgNS = "http://www.w3.org/2000/svg";
     const svg = document.createElementNS(svgNS, "svg");
-    svg.setAttribute("width", "20");
-    svg.setAttribute("height", "12");
-    svg.setAttribute("viewBox", "0 0 20 12");
+    svg.setAttribute("width", "18");
+    svg.setAttribute("height", "10");
+    svg.setAttribute("viewBox", "0 0 18 10");
     
     const leafPath = document.createElementNS(svgNS, "path");
     
-    // Forma de hoja orientada correctamente según el lado
-    if (side === 'left') {
-        // Hoja izquierda - apunta hacia la izquierda
-        leafPath.setAttribute("d", "M10,0 C14,3 16,6 10,12 C6,6 8,3 10,0");
-    } else {
-        // Hoja derecha - apunta hacia la derecha
-        leafPath.setAttribute("d", "M10,0 C6,3 4,6 10,12 C14,6 12,3 10,0");
-    }
-    
+    // Forma de hoja simple y realista
+    leafPath.setAttribute("d", "M9,0 C12,3 15,5 9,10 C3,5 6,3 9,0");
     leafPath.setAttribute("class", "leaf-svg");
+    
     svg.appendChild(leafPath);
     leafElement.appendChild(svg);
 }
