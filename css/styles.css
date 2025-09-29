@@ -52,7 +52,7 @@ body {
     overflow: hidden;
 }
 
-/* TALLOS SVG ORGÁNICOS - CON ANIMACIÓN DE CRECIMIENTO */
+/* TALLOS SVG ORGÁNICOS */
 .stem-svg {
     position: absolute;
     bottom: 0;
@@ -116,11 +116,12 @@ body {
     animation: appearPetals 0.8s ease-out forwards;
 }
 
-/* Hojas orgánicas - AMBOS LADOS */
+/* Hojas orgánicas - PEGADAS AL TALLO */
 .leaf {
     position: absolute;
     z-index: 2;
     opacity: 0;
+    transform-origin: center bottom;
 }
 
 .leaf-svg {
@@ -173,22 +174,22 @@ body {
 @keyframes appearLeafLeft {
     0% {
         opacity: 0;
-        transform: translateX(-10px) scale(0) rotate(-10deg);
+        transform: scale(0) rotate(-30deg);
     }
     100% {
         opacity: 0.8;
-        transform: translateX(0px) scale(1) rotate(var(--leaf-rotation));
+        transform: scale(1) rotate(var(--leaf-rotation));
     }
 }
 
 @keyframes appearLeafRight {
     0% {
         opacity: 0;
-        transform: translateX(10px) scale(0) rotate(10deg);
+        transform: scale(0) rotate(30deg);
     }
     100% {
         opacity: 0.8;
-        transform: translateX(0px) scale(1) rotate(var(--leaf-rotation));
+        transform: scale(1) rotate(var(--leaf-rotation));
     }
 }
 
