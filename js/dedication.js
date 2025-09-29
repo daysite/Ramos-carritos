@@ -1,4 +1,4 @@
-// Crear ramo de girasoles con tallos orgánicos y posición correcta
+// Crear ramo de girasoles con animación de crecimiento uno por uno
 function createHotWheelsBouquet() {
     const bouquetContainer = document.getElementById('hotwheels-bouquet');
     
@@ -9,89 +9,51 @@ function createHotWheelsBouquet() {
         'https://files.catbox.moe/9gecld.jpg'
     ];
     
-    // POSICIONES ORIGINALES CORRECTAS (como en la versión anterior)
+    // POSICIONES ORIGINALES CORRECTAS
     const flowerPositions = [
-        // {left, stemHeight, delay} - TALLOS MÁS PEQUEÑOS
+        // {left, stemHeight, delay} 
         { left: 50, stemHeight: 160, delay: 0 },    // Centro
-        { left: 42, stemHeight: 150, delay: 300 },  // Izquierda cerca del centro
-        { left: 58, stemHeight: 150, delay: 600 },  // Derecha cerca del centro
-        { left: 38, stemHeight: 140, delay: 900 },  // Izquierda
-        { left: 62, stemHeight: 140, delay: 1200 }, // Derecha
-        { left: 46, stemHeight: 130, delay: 1500 }, // Izquierda interior
-        { left: 54, stemHeight: 130, delay: 1800 }  // Derecha interior
+        { left: 42, stemHeight: 150, delay: 400 },  // Izquierda cerca del centro
+        { left: 58, stemHeight: 150, delay: 800 },  // Derecha cerca del centro
+        { left: 38, stemHeight: 140, delay: 1200 }, // Izquierda
+        { left: 62, stemHeight: 140, delay: 1600 }, // Derecha
+        { left: 46, stemHeight: 130, delay: 2000 }, // Izquierda interior
+        { left: 54, stemHeight: 130, delay: 2400 }  // Derecha interior
     ];
     
     // Crear efecto de puntos cayendo
     createFallingDots();
     
-    // Crear cada flor CON POSICIÓN CORRECTA
+    // Crear cada flor CON ANIMACIÓN UNO POR UNO
     flowerPositions.forEach((position, index) => {
         setTimeout(() => {
-            createFlowerWithOrganicStem(bouquetContainer, carImages, position, index);
+            createFlowerWithGrowthAnimation(bouquetContainer, carImages, position, index);
         }, position.delay);
     });
-    
-    // Crear hojas adicionales con retraso
-    setTimeout(() => {
-        createAdditionalLeaves(bouquetContainer);
-    }, 2100);
 }
 
-function createFlowerWithOrganicStem(container, carImages, position, index) {
-    // Calcular posición de la flor (final del tallo) - MÉTODO ORIGINAL
+function createFlowerWithGrowthAnimation(container, carImages, position, index) {
+    // Calcular posición de la flor (final del tallo)
     const flowerTop = 500 - position.stemHeight;
     
-    // Crear tallo SVG orgánico
-    createOrganicStem(container, position, index);
+    // 1. PRIMERO crear tallo con animación de crecimiento
+    createGrowingStem(container, position, index);
     
-    // Crear FLOR en la PUNTA DEL TALLO - POSICIÓN CORRECTA
-    const sunflower = document.createElement('div');
-    sunflower.className = 'sunflower';
-    sunflower.style.left = `${position.left}%`;
-    sunflower.style.top = `${flowerTop}px`; // POSICIÓN ORIGINAL CORRECTA
-    sunflower.style.animationDelay = '1.2s';
+    // 2. LUEGO crear hojas (después del tallo)
+    setTimeout(() => {
+        createLeavesBothSides(container, position, index);
+    }, 1000);
     
-    // Crear pétalos
-    const petalCount = 12;
-    for (let i = 0; i < petalCount; i++) {
-        const petal = document.createElement('div');
-        petal.className = 'petal';
-        
-        const angle = (i / petalCount) * Math.PI * 2;
-        
-        petal.style.left = `50%`;
-        petal.style.top = `50%`;
-        petal.style.setProperty('--petal-angle', `${angle * 180 / Math.PI}deg`);
-        petal.style.animationDelay = `${1.5 + (i * 0.05)}s`;
-        
-        sunflower.appendChild(petal);
-    }
-    
-    // Crear centro con imagen circular del carrito
-    const center = document.createElement('div');
-    center.className = 'sunflower-center';
-    
-    const carImg = document.createElement('img');
-    const carType = index % carImages.length;
-    carImg.src = carImages[carType];
-    carImg.alt = `Carrito Hot Wheels`;
-    carImg.className = 'car-center-image';
-    
-    center.appendChild(carImg);
-    sunflower.appendChild(center);
-    
-    // Crear hojas orgánicas en posiciones realistas
-    createOrganicLeaves(container, position, index);
-    
-    // Agregar flor al DOM
-    container.appendChild(sunflower);
+    // 3. FINALMENTE crear flor (después de las hojas)
+    setTimeout(() => {
+        createFlowerAtStemTop(container, carImages, position, index, flowerTop);
+    }, 1500);
 }
 
-function createOrganicStem(container, position, index) {
+function createGrowingStem(container, position, index) {
     const stemSvg = document.createElement('div');
     stemSvg.className = 'stem-svg';
-    stemSvg.style.left = `calc(${position.left}% - 50px)`; // Centrar el SVG
-    stemSvg.style.animationDelay = '0s';
+    stemSvg.style.left = `calc(${position.left}% - 50px)`;
     
     // Crear rutas SVG orgánicas para el tallo
     const svgNS = "http://www.w3.org/2000/svg";
@@ -126,39 +88,107 @@ function createOrganicStem(container, position, index) {
     container.appendChild(stemSvg);
 }
 
-function createOrganicLeaves(container, position, index) {
-    // Crear 2-3 hojas orgánicas por tallo en posiciones realistas
-    const leafCount = 2 + Math.floor(Math.random() * 2);
+function createLeavesBothSides(container, position, index) {
+    // Crear 2 hojas en cada lado del tallo (4 hojas en total)
+    const leafPairs = 2;
     
-    for (let i = 0; i < leafCount; i++) {
-        const leaf = document.createElement('div');
-        leaf.className = 'leaf';
+    for (let i = 0; i < leafPairs; i++) {
+        // Hoja IZQUIERDA
+        const leafLeft = document.createElement('div');
+        leafLeft.className = 'leaf leaf-left';
         
-        // Posiciones de hojas basadas en la altura del tallo
-        const leafHeight = 500 - (position.stemHeight * (0.3 + (i * 0.3)));
-        const leafOffset = (Math.random() * 20 - 10); // Pequeño desplazamiento lateral
-        const leafRotation = (Math.random() * 60 - 30); // Rotación natural
+        // Posición en el lado izquierdo del tallo
+        const leafHeightLeft = 500 - (position.stemHeight * (0.4 + (i * 0.3)));
+        const leafRotationLeft = -25 - (Math.random() * 15);
         
-        leaf.style.left = `calc(${position.left}% + ${leafOffset}px)`;
-        leaf.style.top = `${leafHeight}px`;
-        leaf.style.setProperty('--leaf-rotation', `${leafRotation}deg`);
-        leaf.style.animationDelay = `${0.8 + (i * 0.3)}s`;
+        leafLeft.style.left = `calc(${position.left}% - 20px)`;
+        leafLeft.style.top = `${leafHeightLeft}px`;
+        leafLeft.style.setProperty('--leaf-rotation', `${leafRotationLeft}deg`);
+        leafLeft.style.animationDelay = `${i * 0.2}s`;
         
-        // Crear SVG para hoja orgánica
-        const svgNS = "http://www.w3.org/2000/svg";
-        const svg = document.createElementNS(svgNS, "svg");
-        svg.setAttribute("width", "25");
-        svg.setAttribute("height", "15");
-        svg.setAttribute("viewBox", "0 0 25 15");
+        // SVG para hoja izquierda
+        createLeafSVG(leafLeft, 'left');
+        container.appendChild(leafLeft);
         
-        const leafPath = document.createElementNS(svgNS, "path");
-        leafPath.setAttribute("d", "M12,0 C16,4 20,8 12,15 C4,8 8,4 12,0");
-        leafPath.setAttribute("class", "leaf-svg");
+        // Hoja DERECHA
+        const leafRight = document.createElement('div');
+        leafRight.className = 'leaf leaf-right';
         
-        svg.appendChild(leafPath);
-        leaf.appendChild(svg);
-        container.appendChild(leaf);
+        // Posición en el lado derecho del tallo
+        const leafHeightRight = 500 - (position.stemHeight * (0.5 + (i * 0.25)));
+        const leafRotationRight = 25 + (Math.random() * 15);
+        
+        leafRight.style.left = `calc(${position.left}% + 20px)`;
+        leafRight.style.top = `${leafHeightRight}px`;
+        leafRight.style.setProperty('--leaf-rotation', `${leafRotationRight}deg`);
+        leafRight.style.animationDelay = `${i * 0.2 + 0.1}s`;
+        
+        // SVG para hoja derecha
+        createLeafSVG(leafRight, 'right');
+        container.appendChild(leafRight);
     }
+}
+
+function createLeafSVG(leafElement, side) {
+    const svgNS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("width", "25");
+    svg.setAttribute("height", "15");
+    svg.setAttribute("viewBox", "0 0 25 15");
+    
+    const leafPath = document.createElementNS(svgNS, "path");
+    
+    // Forma de hoja ligeramente diferente según el lado
+    if (side === 'left') {
+        leafPath.setAttribute("d", "M12,0 C16,4 18,7 12,15 C6,7 8,4 12,0");
+    } else {
+        leafPath.setAttribute("d", "M12,0 C8,4 6,7 12,15 C18,7 16,4 12,0");
+    }
+    
+    leafPath.setAttribute("class", "leaf-svg");
+    svg.appendChild(leafPath);
+    leafElement.appendChild(svg);
+}
+
+function createFlowerAtStemTop(container, carImages, position, index, flowerTop) {
+    // Crear FLOR en la PUNTA DEL TALLO
+    const sunflower = document.createElement('div');
+    sunflower.className = 'sunflower';
+    sunflower.style.left = `${position.left}%`;
+    sunflower.style.top = `${flowerTop}px`;
+    sunflower.style.animationDelay = '0s'; // Aparece inmediatamente después del delay
+    
+    // Crear pétalos
+    const petalCount = 12;
+    for (let i = 0; i < petalCount; i++) {
+        const petal = document.createElement('div');
+        petal.className = 'petal';
+        
+        const angle = (i / petalCount) * Math.PI * 2;
+        
+        petal.style.left = `50%`;
+        petal.style.top = `50%`;
+        petal.style.setProperty('--petal-angle', `${angle * 180 / Math.PI}deg`);
+        petal.style.animationDelay = `${i * 0.05}s`;
+        
+        sunflower.appendChild(petal);
+    }
+    
+    // Crear centro con imagen circular del carrito
+    const center = document.createElement('div');
+    center.className = 'sunflower-center';
+    
+    const carImg = document.createElement('img');
+    const carType = index % carImages.length;
+    carImg.src = carImages[carType];
+    carImg.alt = `Carrito Hot Wheels`;
+    carImg.className = 'car-center-image';
+    
+    center.appendChild(carImg);
+    sunflower.appendChild(center);
+    
+    // Agregar flor al DOM
+    container.appendChild(sunflower);
 }
 
 function createFallingDots() {
@@ -179,42 +209,6 @@ function createFallingDots() {
         
         document.body.appendChild(dot);
     }
-}
-
-function createAdditionalLeaves(container) {
-    // Agregar hojas adicionales en la base
-    const additionalLeaves = [
-        { left: 44, bottom: 15 },
-        { left: 50, bottom: 20 },
-        { left: 56, bottom: 18 },
-        { left: 48, bottom: 25 },
-        { left: 52, bottom: 22 }
-    ];
-    
-    additionalLeaves.forEach((leafPos, index) => {
-        const leaf = document.createElement('div');
-        leaf.className = 'leaf';
-        leaf.style.left = `${leafPos.left}%`;
-        leaf.style.bottom = `${leafPos.bottom}px`;
-        leaf.style.setProperty('--leaf-rotation', `${Math.random() * 30 - 15}deg`);
-        leaf.style.animationDelay = `${index * 0.1}s`;
-        leaf.style.animationDuration = '0.6s';
-        
-        // SVG para hoja adicional
-        const svgNS = "http://www.w3.org/2000/svg";
-        const svg = document.createElementNS(svgNS, "svg");
-        svg.setAttribute("width", "20");
-        svg.setAttribute("height", "12");
-        svg.setAttribute("viewBox", "0 0 20 12");
-        
-        const leafPath = document.createElementNS(svgNS, "path");
-        leafPath.setAttribute("d", "M10,0 C13,3 16,6 10,12 C4,6 7,3 10,0");
-        leafPath.setAttribute("class", "leaf-svg");
-        
-        svg.appendChild(leafPath);
-        leaf.appendChild(svg);
-        container.appendChild(leaf);
-    });
 }
 
 // Inicializar cuando cargue la página
