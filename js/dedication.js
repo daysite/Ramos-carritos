@@ -1,4 +1,4 @@
-// Crear ramo de girasoles con hojas perfectamente ubicadas
+// Crear ramo de girasoles con hojas pegadas al tallo
 function createHotWheelsBouquet() {
     const bouquetContainer = document.getElementById('hotwheels-bouquet');
     
@@ -39,9 +39,9 @@ function createFlowerWithGrowthAnimation(container, carImages, position, index) 
     // 1. PRIMERO crear tallo con animación de crecimiento
     createGrowingStem(container, position, index);
     
-    // 2. LUEGO crear hojas PERFECTAMENTE UBICADAS
+    // 2. LUEGO crear hojas PEGADAS AL TALLO
     setTimeout(() => {
-        createPerfectLeaves(container, position, index);
+        createStemLeaves(container, position, index);
     }, 1000);
     
     // 3. FINALMENTE crear flor (después de las hojas)
@@ -88,78 +88,97 @@ function createGrowingStem(container, position, index) {
     container.appendChild(stemSvg);
 }
 
-function createPerfectLeaves(container, position, index) {
-    // Crear 2 pares de hojas PERFECTAMENTE UBICADAS
-    const leafPairs = 2;
+function createStemLeaves(container, position, index) {
+    // POSICIONES FIJAS Y EXACTAS PARA LAS HOJAS
+    const leafConfigs = [
+        // Para tallo centro (posición 50%)
+        [
+            { side: 'left', top: 370, leftOffset: -8, rotation: -40 },
+            { side: 'right', top: 360, leftOffset: 8, rotation: 40 },
+            { side: 'left', top: 420, leftOffset: -10, rotation: -30 },
+            { side: 'right', top: 410, leftOffset: 10, rotation: 30 }
+        ],
+        // Para tallo izquierda (posición 42%)
+        [
+            { side: 'left', top: 365, leftOffset: -8, rotation: -35 },
+            { side: 'right', top: 355, leftOffset: 8, rotation: 35 },
+            { side: 'left', top: 415, leftOffset: -10, rotation: -25 },
+            { side: 'right', top: 405, leftOffset: 10, rotation: 25 }
+        ],
+        // Para tallo derecha (posición 58%)
+        [
+            { side: 'left', top: 365, leftOffset: -8, rotation: -45 },
+            { side: 'right', top: 355, leftOffset: 8, rotation: 45 },
+            { side: 'left', top: 415, leftOffset: -10, rotation: -35 },
+            { side: 'right', top: 405, leftOffset: 10, rotation: 35 }
+        ],
+        // Para tallo izquierda exterior (posición 38%)
+        [
+            { side: 'left', top: 360, leftOffset: -7, rotation: -30 },
+            { side: 'right', top: 350, leftOffset: 7, rotation: 30 },
+            { side: 'left', top: 410, leftOffset: -9, rotation: -20 },
+            { side: 'right', top: 400, leftOffset: 9, rotation: 20 }
+        ],
+        // Para tallo derecha exterior (posición 62%)
+        [
+            { side: 'left', top: 360, leftOffset: -7, rotation: -50 },
+            { side: 'right', top: 350, leftOffset: 7, rotation: 50 },
+            { side: 'left', top: 410, leftOffset: -9, rotation: -40 },
+            { side: 'right', top: 400, leftOffset: 9, rotation: 40 }
+        ],
+        // Para tallo izquierda interior (posición 46%)
+        [
+            { side: 'left', top: 370, leftOffset: -8, rotation: -35 },
+            { side: 'right', top: 360, leftOffset: 8, rotation: 35 },
+            { side: 'left', top: 420, leftOffset: -10, rotation: -25 },
+            { side: 'right', top: 410, leftOffset: 10, rotation: 25 }
+        ],
+        // Para tallo derecha interior (posición 54%)
+        [
+            { side: 'left', top: 370, leftOffset: -8, rotation: -45 },
+            { side: 'right', top: 360, leftOffset: 8, rotation: 45 },
+            { side: 'left', top: 420, leftOffset: -10, rotation: -35 },
+            { side: 'right', top: 410, leftOffset: 10, rotation: 35 }
+        ]
+    ];
     
-    for (let i = 0; i < leafPairs; i++) {
-        // POSICIONES EXACTAS EN EL TALLO
-        const leafPositions = [
-            // Primer par de hojas (más abajo)
-            { 
-                leftHeight: 0.7,  // 70% de la altura del tallo
-                rightHeight: 0.65, // 65% de la altura del tallo  
-                leftOffset: -12,
-                rightOffset: 12,
-                leftRotation: -35,
-                rightRotation: 35
-            },
-            // Segundo par de hojas (más arriba)
-            { 
-                leftHeight: 0.4,  // 40% de la altura del tallo
-                rightHeight: 0.35, // 35% de la altura del tallo
-                leftOffset: -14,
-                rightOffset: 14,
-                leftRotation: -25,
-                rightRotation: 25
-            }
-        ];
+    // Usar la configuración correspondiente al índice
+    const config = leafConfigs[index] || leafConfigs[0];
+    
+    // Crear las 4 hojas para este tallo
+    config.forEach((leafConfig, i) => {
+        const leaf = document.createElement('div');
+        leaf.className = `leaf leaf-${leafConfig.side}`;
         
-        const pos = leafPositions[i];
+        // Posición exacta pegada al tallo
+        leaf.style.left = `calc(${position.left}% + ${leafConfig.leftOffset}px)`;
+        leaf.style.top = `${leafConfig.top}px`;
+        leaf.style.setProperty('--leaf-rotation', `${leafConfig.rotation}deg`);
+        leaf.style.animationDelay = `${i * 0.15}s`;
         
-        // Hoja IZQUIERDA - POSICIÓN EXACTA
-        const leafLeft = document.createElement('div');
-        leafLeft.className = 'leaf leaf-left';
-        
-        const leftHeight = 500 - (position.stemHeight * pos.leftHeight);
-        
-        leafLeft.style.left = `calc(${position.left}% + ${pos.leftOffset}px)`;
-        leafLeft.style.top = `${leftHeight}px`;
-        leafLeft.style.setProperty('--leaf-rotation', `${pos.leftRotation}deg`);
-        leafLeft.style.animationDelay = `${i * 0.2}s`;
-        
-        createLeafSVG(leafLeft, 'left');
-        container.appendChild(leafLeft);
-        
-        // Hoja DERECHA - POSICIÓN EXACTA
-        const leafRight = document.createElement('div');
-        leafRight.className = 'leaf leaf-right';
-        
-        const rightHeight = 500 - (position.stemHeight * pos.rightHeight);
-        
-        leafRight.style.left = `calc(${position.left}% + ${pos.rightOffset}px)`;
-        leafRight.style.top = `${rightHeight}px`;
-        leafRight.style.setProperty('--leaf-rotation', `${pos.rightRotation}deg`);
-        leafRight.style.animationDelay = `${i * 0.2 + 0.1}s`;
-        
-        createLeafSVG(leafRight, 'right');
-        container.appendChild(leafRight);
-    }
+        // Crear SVG de hoja
+        createLeafSVG(leaf, leafConfig.side);
+        container.appendChild(leaf);
+    });
 }
 
 function createLeafSVG(leafElement, side) {
     const svgNS = "http://www.w3.org/2000/svg";
     const svg = document.createElementNS(svgNS, "svg");
-    svg.setAttribute("width", "18");
-    svg.setAttribute("height", "10");
-    svg.setAttribute("viewBox", "0 0 18 10");
+    svg.setAttribute("width", "16");
+    svg.setAttribute("height", "12");
+    svg.setAttribute("viewBox", "0 0 16 12");
     
     const leafPath = document.createElementNS(svgNS, "path");
     
     // Forma de hoja simple y realista
-    leafPath.setAttribute("d", "M9,0 C12,3 15,5 9,10 C3,5 6,3 9,0");
-    leafPath.setAttribute("class", "leaf-svg");
+    if (side === 'left') {
+        leafPath.setAttribute("d", "M8,0 C11,3 13,6 8,12 C3,6 5,3 8,0");
+    } else {
+        leafPath.setAttribute("d", "M8,0 C5,3 3,6 8,12 C13,6 11,3 8,0");
+    }
     
+    leafPath.setAttribute("class", "leaf-svg");
     svg.appendChild(leafPath);
     leafElement.appendChild(svg);
 }
