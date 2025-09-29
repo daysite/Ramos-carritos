@@ -48,17 +48,16 @@ body {
     width: 100%;
     height: 500px;
     background: #000000;
-    border-radius: 0px; /* Sin bordes redondeados */
+    border-radius: 0px;
     overflow: hidden;
-    /* Quitamos border y box-shadow */
 }
 
-/* TALLOS CON ANIMACIÓN DE CRECIMIENTO */
+/* TALLOS MÁS PEQUEÑOS */
 .flower-stem {
     position: absolute;
-    width: 4px;
+    width: 3px; /* Más delgado */
     background: linear-gradient(to top, #228B22, #32CD32);
-    border-radius: 2px;
+    border-radius: 1px;
     transform-origin: bottom center;
     bottom: 0;
     z-index: 1;
@@ -101,8 +100,8 @@ body {
 /* Pétalos del girasol - COLOR AZUL - MÁS PEQUEÑOS */
 .petal {
     position: absolute;
-    width: 15px;  /* Más pequeño */
-    height: 7px;   /* Más pequeño */
+    width: 15px;
+    height: 7px;
     background: linear-gradient(to bottom, #4A90E2, #357ABD);
     border-radius: 50% 60% 50% 60%;
     transform-origin: center;
@@ -114,8 +113,8 @@ body {
 /* Hojas en los tallos */
 .flower-leaf {
     position: absolute;
-    width: 18px;
-    height: 10px;
+    width: 15px; /* Hojas también más pequeñas */
+    height: 8px;
     background: #32CD32;
     border-radius: 50% 0 50% 0;
     opacity: 0;
@@ -159,7 +158,7 @@ body {
     }
     100% {
         opacity: 1;
-        transform: translate(-50%, -50%) rotate(var(--petal-angle)) translateX(22px) scale(1); /* Distancia ajustada */
+        transform: translate(-50%, -50%) rotate(var(--petal-angle)) translateX(22px) scale(1);
     }
 }
 
