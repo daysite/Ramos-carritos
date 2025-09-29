@@ -99,11 +99,11 @@ body {
     box-shadow: 0 0 15px rgba(74, 144, 226, 0.8);
 }
 
-/* Pétalos del girasol - COLOR AZUL */
+/* Pétalos del girasol - COLOR AZUL - MÁS PEQUEÑOS */
 .petal {
     position: absolute;
-    width: 25px;
-    height: 12px;
+    width: 18px;  /* Más pequeño */
+    height: 9px;   /* Más pequeño */
     background: linear-gradient(to bottom, #4A90E2, #357ABD);
     border-radius: 50% 60% 50% 60%;
     transform-origin: center;
@@ -160,7 +160,7 @@ body {
     }
     100% {
         opacity: 1;
-        transform: translate(-50%, -50%) rotate(var(--petal-angle)) translateX(30px) scale(1);
+        transform: translate(-50%, -50%) rotate(var(--petal-angle)) translateX(25px) scale(1); /* Distancia ajustada */
     }
 }
 
@@ -175,17 +175,18 @@ body {
     }
 }
 
-/* Puntos azules cayendo */
+/* Puntos azules cayendo en TODA LA PANTALLA */
 .falling-dot {
-    position: absolute;
-    width: 4px;
-    height: 4px;
+    position: fixed; /* Cambiado a fixed para toda la pantalla */
+    width: 3px;
+    height: 3px;
     background: #4A90E2;
     border-radius: 50%;
     top: -10px;
     opacity: 0;
-    animation: fallDown 3s linear infinite;
-    box-shadow: 0 0 8px rgba(74, 144, 226, 0.8);
+    animation: fallDown 4s linear infinite;
+    box-shadow: 0 0 6px rgba(74, 144, 226, 0.8);
+    z-index: 5;
 }
 
 @keyframes fallDown {
@@ -194,13 +195,13 @@ body {
         opacity: 0;
     }
     10% {
-        opacity: 1;
+        opacity: 0.8;
     }
     90% {
-        opacity: 1;
+        opacity: 0.8;
     }
     100% {
-        transform: translateY(510px);
+        transform: translateY(100vh); /* Toda la altura de la pantalla */
         opacity: 0;
     }
 }
