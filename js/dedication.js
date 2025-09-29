@@ -1,4 +1,4 @@
-// Crear ramo de girasoles con tallos SVG orgánicos
+// Crear ramo de girasoles con tallos orgánicos y posición correcta
 function createHotWheelsBouquet() {
     const bouquetContainer = document.getElementById('hotwheels-bouquet');
     
@@ -9,37 +9,46 @@ function createHotWheelsBouquet() {
         'https://files.catbox.moe/9gecld.jpg'
     ];
     
-    // Posiciones con tallos orgánicos
+    // POSICIONES ORIGINALES CORRECTAS (como en la versión anterior)
     const flowerPositions = [
-        { left: 50, top: 300, delay: 0 },    // Centro
-        { left: 42, top: 310, delay: 300 },  // Izquierda
-        { left: 58, top: 310, delay: 600 },  // Derecha
-        { left: 38, top: 320, delay: 900 },  // Izquierda exterior
-        { left: 62, top: 320, delay: 1200 }, // Derecha exterior
-        { left: 46, top: 330, delay: 1500 }, // Izquierda interior
-        { left: 54, top: 330, delay: 1800 }  // Derecha interior
+        // {left, stemHeight, delay} - TALLOS MÁS PEQUEÑOS
+        { left: 50, stemHeight: 160, delay: 0 },    // Centro
+        { left: 42, stemHeight: 150, delay: 300 },  // Izquierda cerca del centro
+        { left: 58, stemHeight: 150, delay: 600 },  // Derecha cerca del centro
+        { left: 38, stemHeight: 140, delay: 900 },  // Izquierda
+        { left: 62, stemHeight: 140, delay: 1200 }, // Derecha
+        { left: 46, stemHeight: 130, delay: 1500 }, // Izquierda interior
+        { left: 54, stemHeight: 130, delay: 1800 }  // Derecha interior
     ];
     
     // Crear efecto de puntos cayendo
     createFallingDots();
     
-    // Crear cada flor con tallos orgánicos
+    // Crear cada flor CON POSICIÓN CORRECTA
     flowerPositions.forEach((position, index) => {
         setTimeout(() => {
-            createOrganicFlower(bouquetContainer, carImages, position, index);
+            createFlowerWithOrganicStem(bouquetContainer, carImages, position, index);
         }, position.delay);
     });
+    
+    // Crear hojas adicionales con retraso
+    setTimeout(() => {
+        createAdditionalLeaves(bouquetContainer);
+    }, 2100);
 }
 
-function createOrganicFlower(container, carImages, position, index) {
+function createFlowerWithOrganicStem(container, carImages, position, index) {
+    // Calcular posición de la flor (final del tallo) - MÉTODO ORIGINAL
+    const flowerTop = 500 - position.stemHeight;
+    
     // Crear tallo SVG orgánico
     createOrganicStem(container, position, index);
     
-    // Crear FLOR
+    // Crear FLOR en la PUNTA DEL TALLO - POSICIÓN CORRECTA
     const sunflower = document.createElement('div');
     sunflower.className = 'sunflower';
     sunflower.style.left = `${position.left}%`;
-    sunflower.style.top = `${position.top}px`;
+    sunflower.style.top = `${flowerTop}px`; // POSICIÓN ORIGINAL CORRECTA
     sunflower.style.animationDelay = '1.2s';
     
     // Crear pétalos
@@ -71,7 +80,7 @@ function createOrganicFlower(container, carImages, position, index) {
     center.appendChild(carImg);
     sunflower.appendChild(center);
     
-    // Crear hojas orgánicas
+    // Crear hojas orgánicas en posiciones realistas
     createOrganicLeaves(container, position, index);
     
     // Agregar flor al DOM
@@ -81,7 +90,7 @@ function createOrganicFlower(container, carImages, position, index) {
 function createOrganicStem(container, position, index) {
     const stemSvg = document.createElement('div');
     stemSvg.className = 'stem-svg';
-    stemSvg.style.left = `${position.left}%`;
+    stemSvg.style.left = `calc(${position.left}% - 50px)`; // Centrar el SVG
     stemSvg.style.animationDelay = '0s';
     
     // Crear rutas SVG orgánicas para el tallo
@@ -93,15 +102,19 @@ function createOrganicStem(container, position, index) {
     
     const path = document.createElementNS(svgNS, "path");
     
-    // Rutas orgánicas diferentes para cada tallo
+    // Rutas orgánicas que terminan en la posición correcta de la flor
+    const stemHeight = position.stemHeight;
+    const flowerY = 500 - stemHeight;
+    
+    // Rutas SVG que terminan en la posición Y correcta
     const organicPaths = [
-        "M50,500 C45,400 55,300 50,200 C45,150 55,100 50,50", // Curva suave
-        "M50,500 C40,420 60,350 50,250 C40,200 60,150 50,80", // Más ondulado
-        "M50,500 C55,380 45,280 50,180 C55,130 45,90 50,40",  // Curva opuesta
-        "M50,500 C35,450 65,380 50,300 C35,250 65,200 50,120", // Más ancho
-        "M50,500 C60,420 40,320 50,220 C60,170 40,120 50,60", // Zigzag
-        "M50,500 C45,430 55,360 50,280 C45,230 55,180 50,100", // Sinuoso
-        "M50,500 C40,460 60,400 50,320 C40,280 60,240 50,160"  // Orgánico
+        `M50,500 C45,${400 + (500 - stemHeight)/10} 55,${300 + (500 - stemHeight)/5} 50,${flowerY}`,
+        `M50,500 C40,${420 + (500 - stemHeight)/10} 60,${350 + (500 - stemHeight)/5} 50,${flowerY}`,
+        `M50,500 C55,${380 + (500 - stemHeight)/10} 45,${280 + (500 - stemHeight)/5} 50,${flowerY}`,
+        `M50,500 C35,${450 + (500 - stemHeight)/10} 65,${380 + (500 - stemHeight)/5} 50,${flowerY}`,
+        `M50,500 C60,${420 + (500 - stemHeight)/10} 40,${320 + (500 - stemHeight)/5} 50,${flowerY}`,
+        `M50,500 C45,${430 + (500 - stemHeight)/10} 55,${360 + (500 - stemHeight)/5} 50,${flowerY}`,
+        `M50,500 C40,${460 + (500 - stemHeight)/10} 60,${400 + (500 - stemHeight)/5} 50,${flowerY}`
     ];
     
     path.setAttribute("d", organicPaths[index % organicPaths.length]);
@@ -114,38 +127,32 @@ function createOrganicStem(container, position, index) {
 }
 
 function createOrganicLeaves(container, position, index) {
-    // Crear 2-3 hojas orgánicas por tallo
+    // Crear 2-3 hojas orgánicas por tallo en posiciones realistas
     const leafCount = 2 + Math.floor(Math.random() * 2);
     
     for (let i = 0; i < leafCount; i++) {
         const leaf = document.createElement('div');
         leaf.className = 'leaf';
         
-        // Posiciones orgánicas para las hojas
-        const leafPositions = [
-            { left: -15, top: 350, rotation: -30 },
-            { left: 10, top: 280, rotation: 25 },
-            { left: -20, top: 200, rotation: -40 },
-            { left: 15, top: 380, rotation: 35 },
-            { left: -10, top: 250, rotation: -20 }
-        ];
+        // Posiciones de hojas basadas en la altura del tallo
+        const leafHeight = 500 - (position.stemHeight * (0.3 + (i * 0.3)));
+        const leafOffset = (Math.random() * 20 - 10); // Pequeño desplazamiento lateral
+        const leafRotation = (Math.random() * 60 - 30); // Rotación natural
         
-        const leafPos = leafPositions[(index * leafCount + i) % leafPositions.length];
-        
-        leaf.style.left = `calc(${position.left}% + ${leafPos.left}px)`;
-        leaf.style.top = `${leafPos.top}px`;
-        leaf.style.setProperty('--leaf-rotation', `${leafPos.rotation}deg`);
+        leaf.style.left = `calc(${position.left}% + ${leafOffset}px)`;
+        leaf.style.top = `${leafHeight}px`;
+        leaf.style.setProperty('--leaf-rotation', `${leafRotation}deg`);
         leaf.style.animationDelay = `${0.8 + (i * 0.3)}s`;
         
         // Crear SVG para hoja orgánica
         const svgNS = "http://www.w3.org/2000/svg";
         const svg = document.createElementNS(svgNS, "svg");
-        svg.setAttribute("width", "30");
-        svg.setAttribute("height", "20");
-        svg.setAttribute("viewBox", "0 0 30 20");
+        svg.setAttribute("width", "25");
+        svg.setAttribute("height", "15");
+        svg.setAttribute("viewBox", "0 0 25 15");
         
         const leafPath = document.createElementNS(svgNS, "path");
-        leafPath.setAttribute("d", "M15,0 C20,5 25,10 15,20 C5,10 10,5 15,0");
+        leafPath.setAttribute("d", "M12,0 C16,4 20,8 12,15 C4,8 8,4 12,0");
         leafPath.setAttribute("class", "leaf-svg");
         
         svg.appendChild(leafPath);
@@ -172,6 +179,42 @@ function createFallingDots() {
         
         document.body.appendChild(dot);
     }
+}
+
+function createAdditionalLeaves(container) {
+    // Agregar hojas adicionales en la base
+    const additionalLeaves = [
+        { left: 44, bottom: 15 },
+        { left: 50, bottom: 20 },
+        { left: 56, bottom: 18 },
+        { left: 48, bottom: 25 },
+        { left: 52, bottom: 22 }
+    ];
+    
+    additionalLeaves.forEach((leafPos, index) => {
+        const leaf = document.createElement('div');
+        leaf.className = 'leaf';
+        leaf.style.left = `${leafPos.left}%`;
+        leaf.style.bottom = `${leafPos.bottom}px`;
+        leaf.style.setProperty('--leaf-rotation', `${Math.random() * 30 - 15}deg`);
+        leaf.style.animationDelay = `${index * 0.1}s`;
+        leaf.style.animationDuration = '0.6s';
+        
+        // SVG para hoja adicional
+        const svgNS = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(svgNS, "svg");
+        svg.setAttribute("width", "20");
+        svg.setAttribute("height", "12");
+        svg.setAttribute("viewBox", "0 0 20 12");
+        
+        const leafPath = document.createElementNS(svgNS, "path");
+        leafPath.setAttribute("d", "M10,0 C13,3 16,6 10,12 C4,6 7,3 10,0");
+        leafPath.setAttribute("class", "leaf-svg");
+        
+        svg.appendChild(leafPath);
+        leaf.appendChild(svg);
+        container.appendChild(leaf);
+    });
 }
 
 // Inicializar cuando cargue la página
